@@ -52,15 +52,34 @@ func updateItemsFromCsv() error {
 		return err
 	}
 
-  Db.Query("DELETE FROM items;")
+  tx, err := Db.Begin()
+  if err != nil {
+    return err
+  }
+
+  _, err = Db.Query("DELETE FROM items;")
+  if err != nil {
+    tx.Rollback()
+    return err
+  }
+
 	for i, row := range rows {
+    id := i + 1
     item := row[1]
     // kind := row[2]
     // price := row[3]
     // remarks := row[4]
 
-    Db.Exec("INSERT INTO items (id, name) VALUES (?, ?)", i + 1, item)
+    _, err = Db.Exec("INSERT INTO items (id, name) VALUES (?, ?)", id, item)
+    if err != nil {
+      tx.Rollback()
+      return err
+    }
 	}
+
+  if err := tx.Commit(); err != nil {
+    log.Fatal(err)
+  }
 
 	return nil
 }
