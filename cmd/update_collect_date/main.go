@@ -4,9 +4,11 @@ import (
 	"encoding/csv"
 	"log"
 	"net/http"
-	"strconv"
+	"strings"
+	"time"
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/date"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
@@ -21,6 +23,11 @@ var kinds = kindRepository.GetKinds()
 
 func main() {
 	updateCollectDateFromCsv()
+}
+
+type CollectDate struct {
+  Weekday time.Weekday
+  n int
 }
 
 func updateCollectDateFromCsv() {
@@ -51,25 +58,50 @@ func updateCollectDateFromCsv() {
 	}
 
 	for i, row := range rows {
-		item_id := i + 1
-		item_name := row[1]
-		price, _ := strconv.Atoi(row[3])
-		remarks := row[4]
-
-		// ヘッダー行はスキップ
+    // ヘッダー行はスキップ
 		if i == 0 {
 			continue
 		}
 
-		_, err = repository.Db.Exec("INSERT INTO items (id, name, price, remarks) VALUES (?, ?, ?, ?)", item_id, item_name, price, remarks)
-		if err != nil {
-			tx.Rollback()
-			log.Fatal(err)
-		}
+    area_id := i + 1
+    town := row[0]
+    street := row[1]
+    kanen := row[2]
+    funen := row[2]
+    shigen := row[3]
 	}
+}
 
-	if err = tx.Commit(); err != nil {
-		log.Fatal(err)
-	}
+
+func splitWeekday (str string) []CollectDate {
+  var collectDates []CollectDate
+  weekdays := strings.Split(str, "・")
+
+  for _, weekday := range weekdays {
+    weekday, err := date.JaWeekdayToEn(weekday)
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    collectDates = append(collectDates, CollectDate{weekday, 0})
+  }
+
+  return collectDates
+}
+
+func splitNthWeekday (string) {
+  var collectDates []CollectDate
+  weekdays := strings.Split(str, "・")
+
+  for _, weekday := range weekdays {
+    weekday, err := date.JaWeekdayToEn(weekday)
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    collectDates = append(collectDates, CollectDate{weekday, 0})
+  }
+
+  return collectDates
 }
 
