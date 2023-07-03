@@ -36,3 +36,11 @@ CREATE TABLE IF NOT EXISTS area_collect_dates (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
+
+INSERT INTO kinds (id, name) VALUES
+  (1, '可燃ゴミ'),
+  (2, '不燃ゴミ'),
+  (3, '資源'),
+  (4, '粗大ゴミ'),
+  (5, '不可')
+;
