@@ -7,9 +7,11 @@ CREATE TABLE areas (
 );
 
 DROP TABLE IF EXISTS items;
-CREATE TABLEitems (
+CREATE TABLE items (
   id INT NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
+  price INT NOT NULL DEFAULT 0,
+  remarks VARCHAR(255) NOT NULL DEFAULT '',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -33,16 +35,6 @@ CREATE TABLE item_kinds (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS item_details;
-CREATE TABLE item_details (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  item_id INT NOT NULL,
-  price INT NOT NULL DEFAULT 0,
-  remarks VARCHAR(255) NOT NULL DEFAULT '',
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 DROP TABLE IF EXISTS area_collect_dates;
 CREATE TABLE area_collect_dates (
   area_id INT NOT NULL,
@@ -50,12 +42,13 @@ CREATE TABLE area_collect_dates (
   date DATE NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 INSERT INTO kinds (id, name) VALUES
   (1, '可燃ごみ'),
   (2, '不燃ごみ'),
-  (3, '資源'),
-  (4, '粗大ごみ'),
-  (5, '不可')
+  (3, '不燃ごみ（水銀含有物）'),
+  (4, '資源'),
+  (5, '粗大ごみ'),
+  (6, '不可')
 ;
