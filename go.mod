@@ -1,4 +1,4 @@
-module update-items
+module github.com/yoshiyoshiharu/item-throw-ways
 
 go 1.20
 

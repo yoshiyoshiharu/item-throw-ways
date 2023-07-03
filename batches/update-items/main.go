@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -20,12 +22,7 @@ const (
 )
 
 var Db *sql.DB
-var Kinds []Kind
-
-type Kind struct {
-  Id int
-  Name string
-}
+var Kinds []entity.Kind
 
 func init() {
   var err error
@@ -118,7 +115,7 @@ func SetKinds() {
   defer rows.Close()
 
   for rows.Next() {
-    var kind Kind
+    var kind entity.Kind
     err := rows.Scan(&kind.Id, &kind.Name)
     if err != nil {
       log.Fatal(err)
