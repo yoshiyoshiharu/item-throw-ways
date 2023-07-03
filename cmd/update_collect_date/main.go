@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
-	"github.com/yoshiyoshiharu/item-throw-ways/pkg/date"
+	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
@@ -89,8 +89,9 @@ func splitWeekday (str string) []CollectDate {
   return collectDates
 }
 
-func splitNthWeekday (string) {
+func splitNthWeekday (str string) []CollectDate {
   var collectDates []CollectDate
+  // 第2・第4火曜日 から nとweekdayを抜き出す
   weekdays := strings.Split(str, "・")
 
   for _, weekday := range weekdays {
