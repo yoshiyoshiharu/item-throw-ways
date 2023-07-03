@@ -4,7 +4,7 @@ import "time"
 
 type AreaCollectionDate struct {
   Id  int
-  Item Item
-  Kind Kind
+  ItemId int
+  KindId int
   Date time.Time
 }
