@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 
 	"golang.org/x/text/encoding/japanese"
@@ -22,13 +21,13 @@ const (
 
 var kindRepository = repository.NewKindRepository()
 var itemRepository = repository.NewItemRepository()
+var kinds = kindRepository.GetKinds()
 
 func main() {
-	kinds := kindRepository.GetKinds()
-	updateItemsFromCsv(kinds)
+	updateItemsFromCsv()
 }
 
-func updateItemsFromCsv(kinds []entity.Kind) {
+func updateItemsFromCsv() {
 	resp, err := http.Get(
 		API_URL,
 	)

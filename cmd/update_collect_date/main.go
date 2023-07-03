@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -16,16 +15,15 @@ const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
 )
 
-var Kinds []entity.Kind
 var kindRepository = repository.NewKindRepository()
 var itemRepository = repository.NewItemRepository()
+var kinds = kindRepository.GetKinds()
 
 func main() {
-	kinds := kindRepository.GetKinds()
-	updateCollectDateFromCsv(kinds)
+	updateCollectDateFromCsv()
 }
 
-func updateCollectDateFromCsv(kinds []entity.Kind) {
+func updateCollectDateFromCsv() {
 	resp, err := http.Get(
 		API_URL,
 	)
