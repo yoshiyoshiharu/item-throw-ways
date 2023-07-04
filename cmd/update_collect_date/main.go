@@ -81,21 +81,22 @@ func updateCollectDateFromCsv() {
 
     shigenDate := CollectDate{jaShigen, 0}
 
+    currentDate := time.Now()
     for _, kanenDate := range kanenDates {
-      allWeekdayDate := date.AllWeekdayDates(kanenDate.Weekday, 2023, 7); if err != nil {
+      allWeekdayDate := date.AllWeekdayDates(kanenDate.Weekday, currentDate.Year(), currentDate.Month()); if err != nil {
         log.Fatal(err)
       }
       insertCollectDate(area_id, "可燃ごみ", allWeekdayDate)
     }
 
     for _, funenDate := range funenDates {
-      nthWeekdayDate, err := date.NthWeekdayDate(funenDate.n, funenDate.Weekday, 2023, 7); if err != nil {
+      nthWeekdayDate, err := date.NthWeekdayDate(funenDate.n, funenDate.Weekday, currentDate.Year(), currentDate.Month()); if err != nil {
         log.Fatal(err)
       }
       insertCollectDate(area_id, "不燃ごみ", []time.Time{nthWeekdayDate})
     }
 
-    allWeekdayDate := date.AllWeekdayDates(shigenDate.Weekday, 2023, 7); if err != nil {
+    allWeekdayDate := date.AllWeekdayDates(shigenDate.Weekday, currentDate.Year(), currentDate.Month()); if err != nil {
       log.Fatal(err)
     }
     insertCollectDate(area_id, "資源", allWeekdayDate)

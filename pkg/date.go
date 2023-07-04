@@ -18,7 +18,7 @@ var JaWeekdays = map[string]string{
   "Saturday": "土曜日",
 }
 
-func NthWeekdayDate(n int, wd time.Weekday, year int, month int) (time.Time, error) {
+func NthWeekdayDate(n int, wd time.Weekday, year int, month time.Month) (time.Time, error) {
 	firstDay := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
 
 	firstWeekday := firstDay.AddDate(0, 0, int(wd-firstDay.Weekday()))
@@ -37,7 +37,7 @@ func NthWeekdayDate(n int, wd time.Weekday, year int, month int) (time.Time, err
 	return nthWeekday, nil
 }
 
-func AllWeekdayDates(wd time.Weekday, year int, month int) []time.Time {
+func AllWeekdayDates(wd time.Weekday, year int, month time.Month) []time.Time {
   firstDay := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
 
   firstWeekday := firstDay.AddDate(0, 0, int(wd-firstDay.Weekday()))
