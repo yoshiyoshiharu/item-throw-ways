@@ -81,44 +81,37 @@ func updateCollectDateFromCsv() {
 
     shigenDate := CollectDate{jaShigen, 0}
 
-    stmt, _ := repository.Db.Prepare("INSERT INTO area_collect_dates (area_id, kind_id, date) VALUES (?, ?, ?)")
-
-    // TODO 関数に切り出す
     for _, kanenDate := range kanenDates {
       allWeekdayDate := date.AllWeekdayDates(kanenDate.Weekday, 2023, 7); if err != nil {
         log.Fatal(err)
       }
-      kanenKindId, err := kindRepository.GetKindIdByName(kinds, "可燃ごみ"); if err != nil {
-        log.Fatal(err)
-      }
-      for _, date := range allWeekdayDate {
-        stmt.Exec(area_id, kanenKindId, date)
-      }
+      insertCollectDate(area_id, "可燃ごみ", allWeekdayDate)
     }
 
     for _, funenDate := range funenDates {
       nthWeekdayDate, err := date.NthWeekdayDate(funenDate.n, funenDate.Weekday, 2023, 7); if err != nil {
         log.Fatal(err)
       }
-      funenKindId, err := kindRepository.GetKindIdByName(kinds, "不燃ごみ"); if err != nil {
-        log.Fatal(err)
-      }
-
-      stmt.Exec(area_id, funenKindId, nthWeekdayDate)
+      insertCollectDate(area_id, "不燃ごみ", []time.Time{nthWeekdayDate})
     }
 
     allWeekdayDate := date.AllWeekdayDates(shigenDate.Weekday, 2023, 7); if err != nil {
       log.Fatal(err)
     }
-    kanenKindId, err := kindRepository.GetKindIdByName(kinds, "資源"); if err != nil {
-      log.Fatal(err)
-    }
-    for _, date := range allWeekdayDate {
-      stmt.Exec(area_id, kanenKindId, date)
-    }
+    insertCollectDate(area_id, "資源", allWeekdayDate)
 	}
 }
 
+func insertCollectDate(area_id int, kindName string, dates []time.Time) {
+  kindId, err := kindRepository.GetKindIdByName(kinds, kindName); if err != nil {
+    log.Fatal(err)
+  }
+  stmt, _ := repository.Db.Prepare("INSERT INTO area_collect_dates (area_id, kind_id, date) VALUES (?, ?, ?)")
+
+  for _, date := range dates {
+    stmt.Exec(area_id, kindId, date)
+  }
+}
 
 func splitWeekday (str string) []CollectDate {
   var collectDates []CollectDate
