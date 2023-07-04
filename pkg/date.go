@@ -27,7 +27,7 @@ func NthWeekdayDate(n int, wd time.Weekday, year int, month int) (time.Time, err
 		firstWeekday = firstWeekday.AddDate(0, 0, 7)
 	}
 
-	nthWeekday := firstWeekday.AddDate(0, 0, 7*(n-1))
+	nthWeekday := firstWeekday.AddDate(0, 0, 7*(n-1) + 1)
 
 	if nthWeekday.Month() != firstDay.Month() {
 		err := fmt.Errorf("%d年%d月の第%d %sは存在しません。", year, month, n, wd)
@@ -35,6 +35,25 @@ func NthWeekdayDate(n int, wd time.Weekday, year int, month int) (time.Time, err
 	}
 
 	return nthWeekday, nil
+}
+
+func AllWeekdayDates(wd time.Weekday, year int, month int) []time.Time {
+  firstDay := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
+
+  firstWeekday := firstDay.AddDate(0, 0, int(wd-firstDay.Weekday()))
+
+  if firstWeekday.Month() != firstDay.Month() {
+    firstWeekday = firstWeekday.AddDate(0, 0, 7)
+  }
+
+  var dates []time.Time
+  for i := 0; i < 5; i++ {
+    if firstWeekday.AddDate(0, 0, 7*i).Month() == firstDay.Month() {
+      dates = append(dates, firstWeekday.AddDate(0, 0, 7*i + 1))
+    }
+  }
+
+  return dates
 }
 
 func JaWeekdayToEn(ja string) (time.Weekday, error) {
@@ -51,6 +70,8 @@ func JaWeekdayToEn(ja string) (time.Weekday, error) {
 		return time.Thursday, nil
 	case JaWeekdays["Friday"]:
 		return time.Friday, nil
+	case JaWeekdays["Saturday"]:
+		return time.Saturday, nil
 	default:
 		return time.Sunday, errors.New("曜日の変換に失敗しました。")
   }
