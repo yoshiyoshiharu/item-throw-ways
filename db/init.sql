@@ -37,6 +37,7 @@ CREATE TABLE areas (
 
 DROP TABLE IF EXISTS area_collect_dates;
 CREATE TABLE area_collect_dates (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   area_id INT NOT NULL,
   kind_id INT NOT NULL,
   date DATE NOT NULL,
