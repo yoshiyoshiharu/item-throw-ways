@@ -4,6 +4,8 @@ import (
 	"encoding/csv"
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -67,8 +69,53 @@ func updateCollectDateFromCsv() {
     town := row[0]
     street := row[1]
     kanen := row[2]
-    funen := row[2]
-    shigen := row[3]
+    funen := row[3]
+    shigen := row[4]
+
+    repository.Db.Exec("INSERT INTO areas (id, name) VALUES (?, ?)", area_id, town + street)
+    kanenDates := splitWeekday(kanen)
+    funenDates := splitNthWeekday(funen)
+    jaShigen, err := date.JaWeekdayToEn(shigen); if err != nil {
+      log.Fatal(err)
+    }
+
+    shigenDate := CollectDate{jaShigen, 0}
+
+    stmt, _ := repository.Db.Prepare("INSERT INTO area_collect_dates (area_id, kind_id, date) VALUES (?, ?, ?)")
+
+    // TODO 関数に切り出す
+    for _, kanenDate := range kanenDates {
+      allWeekdayDate := date.AllWeekdayDates(kanenDate.Weekday, 2023, 7); if err != nil {
+        log.Fatal(err)
+      }
+      kanenKindId, err := kindRepository.GetKindIdByName(kinds, "可燃ごみ"); if err != nil {
+        log.Fatal(err)
+      }
+      for _, date := range allWeekdayDate {
+        stmt.Exec(area_id, kanenKindId, date)
+      }
+    }
+
+    for _, funenDate := range funenDates {
+      nthWeekdayDate, err := date.NthWeekdayDate(funenDate.n, funenDate.Weekday, 2023, 7); if err != nil {
+        log.Fatal(err)
+      }
+      funenKindId, err := kindRepository.GetKindIdByName(kinds, "不燃ごみ"); if err != nil {
+        log.Fatal(err)
+      }
+
+      stmt.Exec(area_id, funenKindId, nthWeekdayDate)
+    }
+
+    allWeekdayDate := date.AllWeekdayDates(shigenDate.Weekday, 2023, 7); if err != nil {
+      log.Fatal(err)
+    }
+    kanenKindId, err := kindRepository.GetKindIdByName(kinds, "資源"); if err != nil {
+      log.Fatal(err)
+    }
+    for _, date := range allWeekdayDate {
+      stmt.Exec(area_id, kanenKindId, date)
+    }
 	}
 }
 
@@ -92,16 +139,18 @@ func splitWeekday (str string) []CollectDate {
 func splitNthWeekday (str string) []CollectDate {
   var collectDates []CollectDate
   // 第2・第4火曜日 から nとweekdayを抜き出す
-  weekdays := strings.Split(str, "・")
+  reg := regexp.MustCompile(`第(\d+)・第(\d+)(\D+)`)
+  matches := reg.FindStringSubmatch(str)
 
-  for _, weekday := range weekdays {
-    weekday, err := date.JaWeekdayToEn(weekday)
-    if err != nil {
-      log.Fatal(err)
-    }
-
-    collectDates = append(collectDates, CollectDate{weekday, 0})
+  n1, err := strconv.Atoi(matches[1])
+  n2, err := strconv.Atoi(matches[2])
+  weekday, err := date.JaWeekdayToEn(matches[3])
+  if err != nil {
+    log.Fatal(err)
   }
+
+  collectDates = append(collectDates, CollectDate{weekday, n1})
+  collectDates = append(collectDates, CollectDate{weekday, n2})
 
   return collectDates
 }
