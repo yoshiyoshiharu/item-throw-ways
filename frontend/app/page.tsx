@@ -1,12 +1,11 @@
-import Image from 'next/image'
+import Form from '../components/Form'
+import Header from '../components/Header'
 
 export default function Home() {
   return (
     <>
-      <form>
-        <input type="text" />
-        <button type="submit" className="bg-teal-400 text-white">検索</button>
-      </form>
+      <Header></Header>
+      <Form></Form>
     </>
   )
 }
