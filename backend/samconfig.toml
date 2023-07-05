@@ -4,7 +4,7 @@ version = 0.1
 
 [default]
 [default.global.parameters]
-stack_name = "ca-app-02"
+stack_name = "ca-02-sam-app"
 
 [default.build.parameters]
 cached = true
