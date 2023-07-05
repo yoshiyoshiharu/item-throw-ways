@@ -3,11 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
 var (
@@ -21,27 +20,21 @@ var (
 	ErrNon200Response = errors.New("Non 200 Response found")
 )
 
+type AreaResponse struct {
+  Id string `json:"id"`
+  Name string `json:"name"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	resp, err := http.Get(DefaultHTTPGetAddress)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
+  repository := repository.NewAreaRepository()
+  areas, err := repository.GetAreas()
 
-	if resp.StatusCode != 200 {
-		return events.APIGatewayProxyResponse{}, ErrNon200Response
-	}
-
-	ip, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
-
-	if len(ip) == 0 {
-		return events.APIGatewayProxyResponse{}, ErrNoIP
-	}
+  if err != nil {
+    return events.APIGatewayProxyResponse{}, err
+  }
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Hello, %v", string(ip)),
+		Body:       fmt.Sprintf("%v", areas),
 		StatusCode: 200,
 	}, nil
 }
