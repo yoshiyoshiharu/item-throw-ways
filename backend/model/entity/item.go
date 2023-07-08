@@ -1,8 +1,8 @@
 package entity
 
 type Item struct {
-  Id  int
-  Name string
-  Price int
-  Remarks string
+  Id      int    `json:"id"`
+  Name    string `json:"name"`
+  Price   int    `json:"price"`
+  Remarks string `json:"remarks"`
 }
