@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -16,6 +17,7 @@ type AreaResponse struct {
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
   repository := repository.NewAreaRepository()
   areas, err := repository.GetAreas()
+  sort.Slice(areas, func(i, j int) bool { return areas[i].Id < areas[j].Id })
 
   if err != nil {
     return events.APIGatewayProxyResponse{}, err

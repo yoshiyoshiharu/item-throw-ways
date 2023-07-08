@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -16,14 +17,15 @@ type ItemResponse struct {
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
   repository := repository.NewItemRepository()
-  areas, err := repository.GetItems()
+  items, err := repository.GetItems()
+  sort.Slice(items, func(i, j int) bool { return items[i].Id < items[j].Id })
 
   if err != nil {
     return events.APIGatewayProxyResponse{}, err
   }
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("%v", areas),
+		Body:       fmt.Sprintf("%v", items),
 		StatusCode: 200,
 	}, nil
 }
