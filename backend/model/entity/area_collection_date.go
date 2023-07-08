@@ -3,8 +3,8 @@ package entity
 import "time"
 
 type AreaCollectionDate struct {
-  Id  int
-  ItemId int
-  KindId int
-  Date time.Time
+  Id  int `json:"id"`
+  ItemId int `json:"item_id"`
+  KindId int `json:"kind_id"`
+  Date time.Time `json:"date"`
 }
