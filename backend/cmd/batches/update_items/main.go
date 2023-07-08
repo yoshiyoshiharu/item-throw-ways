@@ -61,7 +61,7 @@ func updateItemsFromCsv() {
 	}
 
 	for i, row := range rows {
-		item_id := i + 1
+		item_id := i
 		item_name := row[1]
 		kind_names := GetKindsFromCell(row[2])
 		price, _ := strconv.Atoi(row[3])

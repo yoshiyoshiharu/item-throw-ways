@@ -72,7 +72,7 @@ func updateCollectDateFromCsv() {
 			continue
 		}
 
-    area_id := i + 1
+    area_id := i
     town := row[0]
     street := row[1]
     kanen := row[2]
