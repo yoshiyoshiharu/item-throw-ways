@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 
@@ -23,8 +25,12 @@ var kindRepository = repository.NewKindRepository()
 var itemRepository = repository.NewItemRepository()
 var kinds = kindRepository.GetKinds()
 
+func handler(c context.Context) {
+  updateItemsFromCsv()
+}
+
 func main() {
-	updateItemsFromCsv()
+  lambda.Start(handler)
 }
 
 func updateItemsFromCsv() {

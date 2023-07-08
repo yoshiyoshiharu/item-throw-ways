@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
+	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -9,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 	"golang.org/x/text/encoding/japanese"
@@ -23,8 +26,12 @@ var kindRepository = repository.NewKindRepository()
 var itemRepository = repository.NewItemRepository()
 var kinds = kindRepository.GetKinds()
 
+func handler(c context.Context) {
+  updateCollectDateFromCsv()
+}
+
 func main() {
-	updateCollectDateFromCsv()
+  lambda.Start(handler)
 }
 
 type CollectDate struct {
@@ -110,6 +117,7 @@ func insertCollectDate(area_id int, kindName string, dates []time.Time) {
   stmt, _ := repository.Db.Prepare("INSERT INTO area_collect_dates (area_id, kind_id, date) VALUES (?, ?, ?)")
 
   for _, date := range dates {
+    fmt.Println("insertCollectDate", area_id, kindId, date)
     stmt.Exec(area_id, kindId, date)
   }
 }
