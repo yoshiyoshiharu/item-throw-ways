@@ -26,6 +26,7 @@ Resources:
           Properties:
             Path: /areas
             Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -37,6 +38,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateCollectDatesFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
