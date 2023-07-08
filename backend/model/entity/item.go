@@ -2,7 +2,7 @@ package entity
 
 type Item struct {
   Id  int
-  name string
-  price int
-  remarks string
+  Name string
+  Price int
+  Remarks string
 }

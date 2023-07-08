@@ -27,6 +27,21 @@ Resources:
             Path: /areas
             Method: GET
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  GetItemsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/api/items/
+      Handler: items
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items
+            Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
