@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"sort"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -9,16 +9,12 @@ import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
-type ItemResponse struct {
-  Id          string `json:"id"`
-  Name        string `json:"name"`
-  Kind        string `json:"kind"`
-}
-
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
   repository := repository.NewItemRepository()
   items, err := repository.GetItems()
   sort.Slice(items, func(i, j int) bool { return items[i].Id < items[j].Id })
+
+  jsonBody, err := json.Marshal(items)
 
   if err != nil {
     return events.APIGatewayProxyResponse{}, err
@@ -28,7 +24,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
     Headers: map[string]string{
       "Access-Control-Allow-Origin": "*",
     },
-		Body:       fmt.Sprintf("%v", items),
+		Body:       string(jsonBody),
 		StatusCode: 200,
 	}, nil
 }
