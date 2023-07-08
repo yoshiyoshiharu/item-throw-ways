@@ -32,7 +32,7 @@ func (r *itemRepository) ItemExists(name string) bool {
 }
 
 func (r *itemRepository) GetItems() ([]entity.Item, error) {
-    rows, err := Db.Query("SELECT id, name FROM items")
+  rows, err := Db.Query("SELECT id, name FROM items")
   if err != nil {
     return nil, err
   }
