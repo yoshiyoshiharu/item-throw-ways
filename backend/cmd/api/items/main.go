@@ -25,6 +25,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
   }
 
 	return events.APIGatewayProxyResponse{
+    Headers: map[string]string{
+      "Access-Control-Allow-Origin": "*",
+    },
 		Body:       fmt.Sprintf("%v", items),
 		StatusCode: 200,
 	}, nil
