@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"gorm.io/gorm"
 )
 
 type ItemRepository interface {
@@ -19,10 +19,11 @@ func NewItemRepository() ItemRepository {
 }
 
 func (r *itemRepository) ItemExists(name string) bool {
-	sqlStmt := `SELECT name FROM items WHERE name = ?`
-	err := Db.QueryRow(sqlStmt, name).Scan(&name)
-	if err != nil {
-		if err != sql.ErrNoRows {
+  var item entity.Item
+  err := Db.Where("name = ?", name).First(&item)
+
+  if err != nil {
+		if err.Error != gorm.ErrRecordNotFound {
 			log.Fatal(err)
 		}
 		return false
@@ -32,20 +33,8 @@ func (r *itemRepository) ItemExists(name string) bool {
 }
 
 func (r *itemRepository) GetItems() ([]entity.Item, error) {
-  rows, err := Db.Query("SELECT id, name FROM items")
-  if err != nil {
-    return nil, err
-  }
-
   var items []entity.Item
-  for rows.Next() {
-    var item entity.Item
-    err := rows.Scan(&item.Id, &item.Name)
-    if err != nil {
-      return nil, err
-    }
-    items = append(items, item)
-  }
+  Db.Find(&items)
 
   return items, nil
 }

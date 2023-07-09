@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"log"
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 )
@@ -21,21 +20,7 @@ func NewKindRepository() KindRepository {
 func (r *kindRepository) GetKinds() []entity.Kind {
   kinds := []entity.Kind{}
 
-  rows, err := Db.Query("SELECT id, name FROM kinds;")
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer rows.Close()
-
-  for rows.Next() {
-    var kind entity.Kind
-    err := rows.Scan(&kind.Id, &kind.Name)
-    if err != nil {
-      log.Fatal(err)
-    }
-    kinds = append(kinds, kind)
-  }
-
+  Db.Find(&kinds)
   return kinds
 }
 
