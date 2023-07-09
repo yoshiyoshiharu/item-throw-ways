@@ -20,7 +20,8 @@ export default function Calendar({ areaCollectionDates }: { areaCollectionDates:
     return {
       title: areaCollectionDate.kind,
       start: areaCollectionDate.date,
-      backgroundColor: backgroundColor(areaCollectionDate.kind)
+      backgroundColor: backgroundColor(areaCollectionDate.kind),
+      borderColor: backgroundColor(areaCollectionDate.kind)
     }
   });
 
@@ -30,6 +31,6 @@ export default function Calendar({ areaCollectionDates }: { areaCollectionDates:
       events={events}
       contentHeight="auto"
       locale="ja"
-    />
+    /> 
   )
 }
