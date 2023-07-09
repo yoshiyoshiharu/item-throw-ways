@@ -12,6 +12,9 @@ export default function Sidebar() {
     setAreas(data)
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  }
+
   useEffect(() => {
     fetchAreas()
   }, [])
@@ -19,11 +22,11 @@ export default function Sidebar() {
   return (
     <div className="border-l-2 w-4/12">
       <div className="flex justify-center mt-6">
-        <select className="p-4 border-2 rounded-lg text-gray-600">
+        <select onChange={handleChange} className="p-4 border-2 rounded-lg text-gray-600">
           <option>エリアを選択してください</option>
           {
             areas.map((area) => (
-              <option key={area.id}>{area.name}</option>
+              <option key={area.id} value={area.id}>{area.name}</option>
             ))
           }
         </select>
