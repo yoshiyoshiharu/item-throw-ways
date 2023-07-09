@@ -39,8 +39,8 @@ CREATE TABLE areas (
   deleted_at DATETIME
 );
 
-DROP TABLE IF EXISTS area_collect_dates;
-CREATE TABLE area_collect_dates (
+DROP TABLE IF EXISTS area_collect_weekdays;
+CREATE TABLE area_collect_weekdays (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   area_id INT NOT NULL,
   kind_id INT NOT NULL,

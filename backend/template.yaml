@@ -42,6 +42,21 @@ Resources:
             Path: /items
             Method: GET
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  GetAreaCollectWeekdaysFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/api/area_collect_dates/
+      Handler: areas
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /area_collect_dates
+            Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -55,10 +70,10 @@ Resources:
             Schedule: rate(1 minute)
       Timeout: 300
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
-  UpdateCollectDatesFunction:
+  UpdateCollectWeekdaysFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: cmd/batches/update_collect_dates
+      CodeUri: cmd/batches/update_collect_weekdays
       Handler: schedule-exec
       Runtime: go1.x
       Events:
@@ -79,4 +94,3 @@ Outputs:
   HelloWorldFunction:
     Description: "First Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
-
