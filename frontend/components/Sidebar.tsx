@@ -24,7 +24,6 @@ export default function Sidebar() {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const area_id = e.target.value
     fetchAreaCollectionDates(area_id)
-    console.log(areaCollectionDates)
   }
 
   useEffect(() => {
