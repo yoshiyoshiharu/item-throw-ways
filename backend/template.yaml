@@ -42,11 +42,11 @@ Resources:
             Path: /items
             Method: GET
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
-  GetAreaCollectWeekdaysFunction:
+  GetAreaCollectDatesFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: cmd/api/area_collect_dates/
-      Handler: areas
+      Handler: area_collect_dates
       Runtime: go1.x
       Architectures:
         - x86_64
@@ -61,7 +61,7 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: cmd/batches/update_items
-      Handler: schedule-exec
+      Handler: update_items
       Runtime: go1.x
       Events:
         ScheduleEvent:
@@ -74,7 +74,7 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: cmd/batches/update_collect_weekdays
-      Handler: schedule-exec
+      Handler: update_collect_weekdays
       Runtime: go1.x
       Events:
         ScheduleEvent:

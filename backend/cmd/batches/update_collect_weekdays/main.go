@@ -89,7 +89,7 @@ func updateCollectWeekdayFromCsv() {
 			kind := entity.Kind{}
 			repository.Db.Where("name = ?", kindName).Limit(1).Find(&kind)
 			for _, weekday := range weekdays {
-				areaCollectWeekday := entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: int(weekday.Weekday), Lap: weekday.Lap}
+				areaCollectWeekday := entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: weekday.Weekday, Lap: weekday.Lap}
 				repository.Db.Create(&areaCollectWeekday)
 			}
 		}

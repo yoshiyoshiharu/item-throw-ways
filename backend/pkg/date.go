@@ -18,7 +18,7 @@ var JaWeekdays = map[string]string{
   "Saturday": "土曜日",
 }
 
-func NthWeekdayDate(n int, wd time.Weekday, year int, month time.Month) (time.Time, error) {
+func NthWeekdayDate(lap int, wd time.Weekday, year int, month time.Month) (time.Time, error) {
 	firstDay := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
 
 	firstWeekday := firstDay.AddDate(0, 0, int(wd-firstDay.Weekday()))
@@ -27,10 +27,10 @@ func NthWeekdayDate(n int, wd time.Weekday, year int, month time.Month) (time.Ti
 		firstWeekday = firstWeekday.AddDate(0, 0, 7)
 	}
 
-	nthWeekday := firstWeekday.AddDate(0, 0, 7*(n-1) + 1)
+	nthWeekday := firstWeekday.AddDate(0, 0, 7*(lap-1) + 1)
 
 	if nthWeekday.Month() != firstDay.Month() {
-		err := fmt.Errorf("%d年%d月の第%d %sは存在しません。", year, month, n, wd)
+		err := fmt.Errorf("%d年%d月の第%d %sは存在しません。", year, month, lap, wd)
 		return time.Time{}, err
 	}
 

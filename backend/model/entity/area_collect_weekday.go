@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -11,6 +13,6 @@ type AreaCollectWeekday struct {
 	Area    Area `json:"area"`
 	KindId  int  `json:"kind_id"`
 	Kind    Kind `json:"kind"`
-	Weekday int  `json:"weekday"`
+	Weekday time.Weekday  `json:"weekday"`
 	Lap     int  `json:"lap"`
 }

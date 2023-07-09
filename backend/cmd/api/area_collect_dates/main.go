@@ -2,7 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -10,28 +11,23 @@ import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
-type AreaCollectingDatesResponse struct {
-	AreaCollectWeekdays []entity.AreaCollectWeekday `json:"area_collect_weekdays"`
-}
-
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	area_id := request.QueryStringParameters["area_id"]
-	kind_id := request.QueryStringParameters["kind_id"]
+	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
+  if err != nil {
+    return events.APIGatewayProxyResponse{}, errors.New("area_id or kind_id is empty")
+  }
 
-	var kind entity.Kind
 	var area entity.Area
-	err := repository.Db.Where("id = ?", kind_id).First(&kind).Error
-	err = repository.Db.Where("id = ?", area_id).First(&area).Error
+  err = repository.Db.Where("id = ?", area_id).First(&area).Error
 
 	if err != nil {
-		log.Fatal(err)
 		return events.APIGatewayProxyResponse{}, err
 	}
 
-	repository := repository.NewAreaCollectWeekdaysRepository()
-	areaCollectWeekdays := repository.GetAreaCollectWeekdays(area, kind)
+	repository := repository.NewAreaCollectDatesRepository()
+	areaCollectDates := repository.GetAreaCollectDates(area)
 
-	jsonBody, err := json.Marshal(areaCollectWeekdays)
+	jsonBody, err := json.Marshal(areaCollectDates)
 
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
