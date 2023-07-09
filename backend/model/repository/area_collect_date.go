@@ -24,7 +24,7 @@ func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area) []ent
   for _, areaCollectWeekday := range areaCollectWeekdays {
     if areaCollectWeekday.Lap == 0 {
       for _, date := range date.AllWeekdayDates(areaCollectWeekday.Weekday, 2023, 7) {
-        insertDate := entity.AreaCollectDate{Kind: areaCollectWeekday.Kind.Name, Date: date}
+        insertDate := entity.AreaCollectDate{Kind: areaCollectWeekday.Kind.Name, Date: date.Format("2006-01-02")}
         areaCollectDates = append(areaCollectDates, insertDate)
       }
     } else {
@@ -33,7 +33,7 @@ func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area) []ent
         panic(err)
       }
 
-      insertDate := entity.AreaCollectDate{Kind: areaCollectWeekday.Kind.Name, Date: date}
+      insertDate := entity.AreaCollectDate{Kind: areaCollectWeekday.Kind.Name, Date: date.Format("2006-01-02")}
       areaCollectDates = append(areaCollectDates, insertDate)
     }
   }
