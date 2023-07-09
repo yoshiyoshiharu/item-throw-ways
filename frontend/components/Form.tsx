@@ -36,6 +36,10 @@ export default function Form() {
     search(e.target.value)
   }
 
+  const handleClick = (id: number) => () => {
+    alert(id)
+  }
+
   return (
     <div className="w-8/12">
       <div className="flex justify-center mt-6">
@@ -45,9 +49,9 @@ export default function Form() {
       <div className="flex flex-wrap justify-center mt-6">
         {
           items.map((item) => (
-            <div key={item.id} className="w-1/4 h-1/4 p-4">
-              <div className="flex flex-col items-center justify-center w-full h-full p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
-                <p className="mt-4 text-lg font-bold">{item.name}</p>
+            <div key={item.id} onClick={handleClick(item.id)} className="w-1/4 h-1/4 p-4">
+              <div className="flex items-center justify-center p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
+                <p className="text-md font-bold">{item.name}</p>
               </div>
             </div>
           ))
