@@ -1,6 +1,7 @@
 'use client'
 
 import { Area } from '../entity/area'
+import Calendar from './Calendar'
 import React, { useEffect, useState } from 'react'
 
 export default function Sidebar() {
@@ -31,6 +32,7 @@ export default function Sidebar() {
           }
         </select>
      </div> 
+      <Calendar></Calendar>
     </div>
   )
 }
