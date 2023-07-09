@@ -47,10 +47,6 @@ func updateItemsFromCsv() {
 		log.Fatal(err)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	repository.Db.Exec("DELETE FROM items;")
 	repository.Db.Exec("DELETE FROM item_kinds;")
 

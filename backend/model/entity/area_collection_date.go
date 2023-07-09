@@ -1,15 +1,16 @@
 package entity
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
 type AreaCollectionDate struct {
   gorm.Model
   Id  int `json:"id"`
-  ItemId int `json:"item_id"`
+  AreaId int `json:"area_id"`
+  Area Area `json:"area"`
   KindId int `json:"kind_id"`
-  Date time.Time `json:"date"`
+  Kind Kind `json:"kind"`
+  Weekday int `json:"weekday"`
+  N int `json:"n"`
 }
