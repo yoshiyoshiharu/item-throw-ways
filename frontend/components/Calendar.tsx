@@ -3,23 +3,17 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import { AreaCollectionDate } from "@/entity/area_collection_date";
 
 export default function Calendar({ areaCollectionDates }: { areaCollectionDates: AreaCollectionDate[] }) {
-  // const events = areaCollectionDates.map((collectionDate: AreaCollectionDate) => {
-  //   return {
-  //     title: 'ゴミの日',
-  //     start: '2023-07-04',
-  //   }
-  // });
-  // 
-  const events = [
-    { title: 'event 1', start: '2023-07-04' },
-    { title: 'event 2', start: '2023-07-05' }
-  ]
-  console.log(events)
+  const events = areaCollectionDates.map((areaCollectionDate: AreaCollectionDate) => {
+    return {
+      title: areaCollectionDate.kind,
+      start: areaCollectionDate.date
+    }
+  });
 
   return(
     <FullCalendar
       plugins={[dayGridPlugin]}
-      initialEvents={events}
+      events={events}
       contentHeight="auto"
       locale="ja"
     />
