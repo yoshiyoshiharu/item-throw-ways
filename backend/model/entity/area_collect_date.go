@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type AreaCollectionDate struct {
+type AreaCollectDate struct {
   gorm.Model
   Id  int `json:"id"`
   AreaId int `json:"area_id"`
@@ -12,5 +12,5 @@ type AreaCollectionDate struct {
   KindId int `json:"kind_id"`
   Kind Kind `json:"kind"`
   Weekday int `json:"weekday"`
-  N int `json:"n"`
+  Lap int `json:"lap"`
 }

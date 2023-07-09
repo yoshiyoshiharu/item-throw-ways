@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/csv"
-	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -35,7 +34,7 @@ func main() {
 
 type CollectDate struct {
   Weekday time.Weekday
-  N int
+  Lap int
 }
 
 func updateCollectDateFromCsv() {
@@ -78,9 +77,21 @@ func updateCollectDateFromCsv() {
       log.Fatal(err)
     }
 
-    fmt.Println("可燃ごみ", kanenWeekdays)
-    fmt.Println("不燃ごみ", funenWeekdays)
-    fmt.Println("資源ごみ", shigenWeekday)
+    kanenKind := entity.Kind{}
+    repository.Db.Where("name = ?", "可燃ごみ").Limit(1).Find(&kanenKind)
+    kindWeekdays := map[string][]CollectDate{
+      "可燃ごみ": kanenWeekdays,
+      "不燃ごみ": funenWeekdays,
+      "資源": []CollectDate{{shigenWeekday, 0}},
+    }
+    for kindName, weekdays := range kindWeekdays {
+      kind := entity.Kind{}
+      repository.Db.Where("name = ?", kindName).Limit(1).Find(&kind)
+      for _, weekday := range weekdays {
+        areaCollectDate := entity.AreaCollectDate{Area: area, Kind: kind, Weekday: int(weekday.Weekday), Lap: weekday.Lap}
+        repository.Db.Create(&areaCollectDate)
+      }
+    }
   }
 }
 
