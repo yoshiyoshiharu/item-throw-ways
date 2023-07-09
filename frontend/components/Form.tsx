@@ -37,20 +37,22 @@ export default function Form() {
   }
 
   return (
-    <>
-      <div className="flex w-full justify-center mt-6">
+    <div className="w-8/12">
+      <div className="flex justify-center mt-6">
         <input type="text" value={inputValue} onChange={handleChange} className="block w-10/12 h-10 p-6 border-2 rounded-lg shadow-lg shadow-black-500/40"/>
       </div>
 
       <div className="flex flex-wrap justify-center mt-6">
-        {items.map((item) => (
-          <div key={item.id} className="w-1/4 h-1/4 p-4">
-            <div className="flex flex-col items-center justify-center w-full h-full p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
-              <p className="mt-4 text-lg font-bold">{item.name}</p>
+        {
+          items.map((item) => (
+            <div key={item.id} className="w-1/4 h-1/4 p-4">
+              <div className="flex flex-col items-center justify-center w-full h-full p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
+                <p className="mt-4 text-lg font-bold">{item.name}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
-    </>
+    </div>
   )
 }
