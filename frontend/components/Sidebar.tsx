@@ -31,8 +31,11 @@ export default function Sidebar() {
             ))
           }
         </select>
-     </div> 
-      <Calendar></Calendar>
+     </div>
+
+      <div className="m-4">
+        <Calendar></Calendar>
+      </div>
     </div>
   )
 }

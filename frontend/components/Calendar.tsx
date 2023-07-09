@@ -4,7 +4,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 const Calendar = () => (
   <FullCalendar
     plugins={[dayGridPlugin]}
-    initialEvents={[{ title: "initial event", start: new Date() }]}
+    initialEvents={[{ start: new Date() }]}
+    contentHeight="auto"
+    locale="ja"
   />
  );
 
