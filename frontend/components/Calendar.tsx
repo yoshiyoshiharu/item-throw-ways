@@ -1,27 +1,22 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import { AreaCollectionDate } from "@/entity/area_collection_date";
+import { useState } from "react";
 
-const Calendar = () => (
-  <FullCalendar
-    plugins={[dayGridPlugin]}
-    initialEvents={[
-      {
-        start: new Date()
-      },
-      {
-        title: "不燃ごみ",
-        start: '2023-07-18',
-        backgroundColor: 'blue',
-      },
-      {
-        title: "可燃ごみ",
-        start: '2023-07-20',
-        backgroundColor: 'red',
-      }
-    ]}
-    contentHeight="auto"
-    locale="ja"
-  />
- );
+export default function Calendar({ areaCollectionDates }: { areaCollectionDates: AreaCollectionDate[] }) {
+  // const events = areaCollectionDates.map((collectionDate: AreaCollectionDate) => {
+  //   return {
+  //     title: collectionDate.kind,
+  //     start: collectionDate.date,
+  //   }
+  // })
 
-export default Calendar;
+  return(
+    <FullCalendar
+      plugins={[dayGridPlugin]}
+      // initialEvents={events}
+      contentHeight="auto"
+      locale="ja"
+    />
+  )
+}

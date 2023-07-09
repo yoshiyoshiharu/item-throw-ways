@@ -3,9 +3,11 @@
 import { Area } from '../entity/area'
 import Calendar from './Calendar'
 import React, { useEffect, useState } from 'react'
+import { AreaCollectionDate } from '../entity/area_collection_date'
 
 export default function Sidebar() {
   const [areas, setAreas] = useState<Area[]>([])
+  const [areaCollectionDates, setAreaCollectionDates] = useState<AreaCollectionDate[]>([])
 
   const fetchAreas = async () => {
     const response = await fetch('http://127.0.0.1:3000/areas')
@@ -13,7 +15,16 @@ export default function Sidebar() {
     setAreas(data)
   }
 
+  const fetchAreaCollectionDates = async (area_id: string) => {
+    const res = await fetch('http://127.0.0.1:3000/area_collect_dates?area_id=' + area_id)
+    const data = await res.json()
+    setAreaCollectionDates(data)
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const area_id = e.target.value
+    fetchAreaCollectionDates(area_id)
+    console.log(areaCollectionDates)
   }
 
   useEffect(() => {
@@ -34,7 +45,7 @@ export default function Sidebar() {
      </div>
 
       <div className="m-4">
-        <Calendar></Calendar>
+        <Calendar areaCollectionDates={areaCollectionDates} />
       </div>
     </div>
   )
