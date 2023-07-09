@@ -1,10 +1,7 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"gorm.io/gorm"
 )
 
 type ItemRepository interface {
@@ -20,14 +17,11 @@ func NewItemRepository() ItemRepository {
 
 func (r *itemRepository) ItemExists(name string) bool {
   var item entity.Item
-  err := Db.Where("name = ?", name).First(&item)
+  result := Db.Where("name = ?", name).Limit(1).Find(&item)
 
-  if err != nil {
-		if err.Error != gorm.ErrRecordNotFound {
-			log.Fatal(err)
-		}
-		return false
-	}
+  if result.RowsAffected == 0 {
+    return false
+  }
 
   return true
 }
