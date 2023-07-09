@@ -8,4 +8,5 @@ type Item struct {
   Name    string `json:"name"`
   Price   int    `json:"price"`
   Remarks string `json:"remarks"`
+  Kinds  []Kind `json:"kinds" gorm:"many2many:item_kinds;"`
 }

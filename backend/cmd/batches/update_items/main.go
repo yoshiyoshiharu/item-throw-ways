@@ -11,6 +11,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 
 	"golang.org/x/text/encoding/japanese"
@@ -21,9 +22,7 @@ const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
 )
 
-var kindRepository = repository.NewKindRepository()
 var itemRepository = repository.NewItemRepository()
-var kinds = kindRepository.GetKinds()
 
 func handler(c context.Context) {
   updateItemsFromCsv()
@@ -48,17 +47,12 @@ func updateItemsFromCsv() {
 		log.Fatal(err)
 	}
 
-	tx, err := repository.Db.Begin()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = repository.Db.Query("DELETE FROM items;")
-	_, err = repository.Db.Query("DELETE FROM item_kinds;")
-	if err != nil {
-		tx.Rollback()
-		log.Fatal(err)
-	}
+	repository.Db.Exec("DELETE FROM items;")
+	repository.Db.Exec("DELETE FROM item_kinds;")
 
 	for i, row := range rows {
 		item_id := i
@@ -67,31 +61,21 @@ func updateItemsFromCsv() {
 		price, _ := strconv.Atoi(row[3])
 		remarks := row[4]
 
+    fmt.Println(item_id, item_name, kind_names, price, remarks)
+
 		// ヘッダー行はスキップ
 		if i == 0 || itemRepository.ItemExists(item_name) {
 			continue
 		}
 
-		fmt.Println(item_id, item_name, kind_names, price, remarks)
+    item := entity.Item{Id: item_id, Name: item_name, Price: price, Remarks: remarks}
+    var kinds []entity.Kind
 
-		_, err = repository.Db.Exec("INSERT INTO items (id, name, price, remarks) VALUES (?, ?, ?, ?)", item_id, item_name, price, remarks)
-		if err != nil {
-			tx.Rollback()
-			log.Fatal(err)
-		}
+    repository.Db.Find(&kinds, "name IN ?", kind_names)
 
-		for _, kind_name := range kind_names {
-			kind_id, err := kindRepository.GetKindIdByName(kinds, kind_name)
-			if err != nil {
-				tx.Rollback()
-				log.Fatal(err)
-			}
-			_, err = repository.Db.Exec("INSERT INTO item_kinds (item_id, kind_id) VALUES (?, ?)", item_id, kind_id)
-		}
-	}
+    item.Kinds = kinds
 
-	if err = tx.Commit(); err != nil {
-		log.Fatal(err)
+    repository.Db.Create(&item)
 	}
 }
 
