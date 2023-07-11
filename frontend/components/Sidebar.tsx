@@ -4,8 +4,9 @@ import { Area } from '../entity/area'
 import Calendar from './Calendar'
 import React, { useEffect, useState } from 'react'
 import { AreaCollectionDate } from '../entity/area_collection_date'
+import { Item } from '../entity/item'
 
-export default function Sidebar() {
+export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
   const [areas, setAreas] = useState<Area[]>([])
   const [areaCollectionDates, setAreaCollectionDates] = useState<AreaCollectionDate[]>([])
 
@@ -45,6 +46,10 @@ export default function Sidebar() {
 
       <div className="m-4">
         <Calendar areaCollectionDates={areaCollectionDates} />
+      </div>
+
+      <div className="flex justify-center mt-6">
+        {targetItem?.name}
       </div>
     </div>
   )

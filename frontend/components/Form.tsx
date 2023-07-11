@@ -1,8 +1,9 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import { Item } from '../entity/item'
 
-export default function Form() {
+export default function Form({ handleTargetItem }: { handleTargetItem: (item: Item) => void; }) {
   const [allItems, setAllItems] = useState<Item[]>([])
   const [items, setItems] = useState<Item[]>([])
   const [inputValue, setInputValue] = useState('')
@@ -37,7 +38,7 @@ export default function Form() {
   }
 
   const handleClick = (item: Item) => () => {
-    alert(item)
+    handleTargetItem(item)
   }
 
   return (
