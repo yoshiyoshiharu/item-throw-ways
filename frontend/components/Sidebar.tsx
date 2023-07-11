@@ -14,13 +14,13 @@ export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
   const kindLabel = (kind: Kind) => {
     switch (kind.name) {
       case '可燃ごみ':
-        return <span className="ml-2 text-sm text-white bg-red-500 rounded px-2 py-1">{kind.name}</span>
+        return <span key={kind.id} className="ml-2 text-sm text-white bg-red-600 rounded px-2 py-1">{kind.name}</span>
       case '不燃ごみ':
-        return <span className="ml-2 text-sm text-white bg-blue-600 rounded px-2 py-1">{kind.name}</span>
+        return <span key={kind.id} className="ml-2 text-sm text-white bg-blue-600 rounded px-2 py-1">{kind.name}</span>
       case '資源':
-        return <span className="ml-2 text-sm text-white bg-green-700 rounded px-2 py-1">{kind.name}</span>
+        return <span key={kind.id} className="ml-2 text-sm text-white bg-green-700 rounded px-2 py-1">{kind.name}</span>
       case '粗大ごみ':
-        return <span className="ml-2 text-sm text-white bg-amber-800 rounded px-2 py-1">{kind.name}</span>
+        return <span key={kind.id} className="ml-2 text-sm text-white bg-amber-800 rounded px-2 py-1">{kind.name}</span>
     }
   }
 
@@ -75,14 +75,14 @@ export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
                   ))
                 }
               </div>
-              <p className="text-sm text-gray-700 flex mt-1">
+              <div className="text-sm text-gray-700 flex mt-1">
                 <div className="mr-2">料金: </div>
                 <div>{targetItem.price} 円</div>
-              </p>
-              <p className="text-sm text-gray-700 flex mt-1">
+              </div>
+              <div className="text-sm text-gray-700 flex mt-1">
                 <div className="mr-2 whitespace-nowrap">備考: </div>
                 <div>{targetItem.remarks}</div>
-              </p>
+              </div>
 
             </div>
           </div>
