@@ -28,7 +28,7 @@ func (r *itemRepository) ItemExists(name string) bool {
 
 func (r *itemRepository) GetItems() ([]entity.Item, error) {
   var items []entity.Item
-  Db.Find(&items)
+  Db.Preload("Kinds").Find(&items)
 
   return items, nil
 }

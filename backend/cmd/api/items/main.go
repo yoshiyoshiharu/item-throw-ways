@@ -12,7 +12,7 @@ import (
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
   repository := repository.NewItemRepository()
   items, err := repository.GetItems()
-  sort.Slice(items, func(i, j int) bool { return items[i].Id < items[j].Id })
+  sort.Slice(items, func(i, j int) bool { return items[i].ID < items[j].ID })
 
   jsonBody, err := json.Marshal(items)
 

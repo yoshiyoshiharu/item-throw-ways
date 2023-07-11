@@ -6,11 +6,11 @@ export default function Calendar({ areaCollectionDates }: { areaCollectionDates:
   const backgroundColor = (kind: string) => {
     switch (kind) {
       case "可燃ごみ":
-        return "red";
+        return "#DC2626";
       case "不燃ごみ":
-        return "blue";
+        return "#2563EB";
       case "資源":
-        return "green";
+        return "#15803D";
       default:
         return "gray";
     }

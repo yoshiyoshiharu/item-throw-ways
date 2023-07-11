@@ -23,7 +23,7 @@ import (
 
 const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
-  HiRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
+  HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
 )
 
 var itemRepository = repository.NewItemRepository()
@@ -82,7 +82,7 @@ func updateItemsFromCsv() {
 			continue
 		}
 
-    item := entity.Item{Id: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
+    item := entity.Item{ID: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
     var kinds []entity.Kind
 
     repository.Db.Find(&kinds, "name IN ?", kind_names)
@@ -109,7 +109,7 @@ func TranslateToHiragana(name string) (string, error) {
     return "", err
   }
 
-  req, _ := http.NewRequest("POST", HiRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+  req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
   req.Header.Set("Content-Type", "application/json")
   client := new(http.Client)
   resp, err := client.Do(req)

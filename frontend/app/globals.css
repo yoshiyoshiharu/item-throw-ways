@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.fc-h-event .fc-event-main-frame {
+  text-align: center;
+}

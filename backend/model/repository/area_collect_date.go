@@ -19,7 +19,7 @@ func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area) []ent
   var areaCollectWeekdays []entity.AreaCollectWeekday
   var areaCollectDates []entity.AreaCollectDate
 
-  Db.Joins("Kind").Where("area_id = ?", area.Id).Find(&areaCollectWeekdays)
+  Db.Joins("Kind").Where("area_id = ?", area.ID).Find(&areaCollectWeekdays)
 
   for _, areaCollectWeekday := range areaCollectWeekdays {
     if areaCollectWeekday.Lap == 0 {
