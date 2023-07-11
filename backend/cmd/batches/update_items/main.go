@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -21,16 +23,26 @@ import (
 
 const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
+  HiRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
 )
 
 var itemRepository = repository.NewItemRepository()
+
+type RequestBody struct {
+  AppId string `json:"app_id"`
+  OutputType string `json:"output_type"`
+  Sentence string `json:"sentence"`
+}
+
+type ResponseBody struct {
+  Converted string `json:"converted"`
+}
 
 func handler(c context.Context) {
   updateItemsFromCsv()
 }
 
 func main() {
-  fmt.Println(os.Getenv("HIRAGANA_TRANSLATION_APP_ID"))
   lambda.Start(handler)
 }
 
@@ -55,18 +67,22 @@ func updateItemsFromCsv() {
 	for i, row := range rows {
 		item_id := i
 		item_name := row[1]
+    item_kana, err := TranslateToHiragana(item_name)
 		kind_names := GetKindsFromCell(row[2])
 		price, _ := strconv.Atoi(row[3])
 		remarks := row[4]
+    if err != nil {
+      log.Fatal(err)
+    }
 
-    fmt.Println(item_id, item_name, kind_names, price, remarks)
+    fmt.Println(item_id, item_name, item_kana, kind_names, price, remarks)
 
 		// ヘッダー行はスキップ
 		if i == 0 || itemRepository.ItemExists(item_name) {
 			continue
 		}
 
-    item := entity.Item{Id: item_id, Name: item_name, Price: price, Remarks: remarks}
+    item := entity.Item{Id: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
     var kinds []entity.Kind
 
     repository.Db.Find(&kinds, "name IN ?", kind_names)
@@ -81,3 +97,30 @@ func GetKindsFromCell(str string) []string {
 	return strings.Split(str, "、")
 }
 
+func TranslateToHiragana(name string) (string, error) {
+  requestBody := &RequestBody{
+    AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
+    OutputType: "hiragana",
+    Sentence: name,
+  }
+
+  jsonString, err := json.Marshal(requestBody)
+  if err != nil {
+    return "", err
+  }
+
+  req, _ := http.NewRequest("POST", HiRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+  req.Header.Set("Content-Type", "application/json")
+  client := new(http.Client)
+  resp, err := client.Do(req)
+  if err != nil {
+    return "", err
+  }
+
+  defer resp.Body.Close()
+
+  var responseBody ResponseBody
+  json.NewDecoder(resp.Body).Decode(&responseBody)
+
+  return responseBody.Converted, nil
+}
