@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -29,6 +30,7 @@ func handler(c context.Context) {
 }
 
 func main() {
+  fmt.Println(os.Getenv("HIRAGANA_TRANSLATION_APP_ID"))
   lambda.Start(handler)
 }
 

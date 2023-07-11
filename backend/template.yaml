@@ -69,6 +69,9 @@ Resources:
           Properties:
             Schedule: rate(1 minute)
       Timeout: 300
+      Environment:
+        Variables:
+          HIRAGANA_TRANSLATION_APP_ID: HIRAGANA_TRANSLATION_APP_ID
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateCollectWeekdaysFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
