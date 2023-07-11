@@ -68,7 +68,7 @@ func updateCollectWeekdayFromCsv() {
 		funen := row[3]
 		shigen := row[4]
 
-		area := entity.Area{Id: area_id, Name: town + street}
+		area := entity.Area{ID: area_id, Name: town + street}
 		repository.Db.Create(&area)
 
 		kanenWeekdays := splitWeekday(kanen)

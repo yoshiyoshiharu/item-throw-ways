@@ -12,7 +12,7 @@ import (
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
   repository := repository.NewAreaRepository()
   areas, err := repository.GetAreas()
-  sort.Slice(areas, func(i, j int) bool { return areas[i].Id < areas[j].Id })
+  sort.Slice(areas, func(i, j int) bool { return areas[i].ID < areas[j].ID })
 
   jsonBody, err := json.Marshal(areas)
 
