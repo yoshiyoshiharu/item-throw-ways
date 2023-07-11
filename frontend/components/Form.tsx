@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Item } from '../entity/item'
+import { toHiragana } from 'wanakana'
 
 export default function Form({ handleTargetItem }: { handleTargetItem: (item: Item) => void; }) {
   const [allItems, setAllItems] = useState<Item[]>([])
@@ -22,7 +23,7 @@ export default function Form({ handleTargetItem }: { handleTargetItem: (item: It
   const search = (value: string) => {
     if (value !== '') {
       const filteredList = allItems.filter((item: Item) =>
-        item.name.indexOf(value) !== -1
+        item.name.indexOf(value) !== -1 || item.name_kana.indexOf(toHiragana(value)) !== -1
       )
       setItems(filteredList)
       return
