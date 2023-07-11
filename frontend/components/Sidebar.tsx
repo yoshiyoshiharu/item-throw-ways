@@ -66,13 +66,24 @@ export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
         {
           targetItem &&
           <div className="m-4">
-            <div className="flex items-center justify-center p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
-              <p className="text-md font-bold">{targetItem.name}</p>
-              {
-                targetItem.kinds.map((kind: Kind) => (
-                  kindLabel(kind)
-                ))
-              }
+            <div className="p-4 border-2 rounded-lg shadow-lg shadow-black-500/40">
+              <div className="flex items-center mb-5 justify-center">
+                <p className="text-md font-bold">{targetItem.name}</p>
+                {
+                  targetItem.kinds.map((kind: Kind) => (
+                    kindLabel(kind)
+                  ))
+                }
+              </div>
+              <p className="text-sm text-gray-700 flex mt-1">
+                <div className="mr-2">料金: </div>
+                <div>{targetItem.price} 円</div>
+              </p>
+              <p className="text-sm text-gray-700 flex mt-1">
+                <div className="mr-2 whitespace-nowrap">備考: </div>
+                <div>{targetItem.remarks}</div>
+              </p>
+
             </div>
           </div>
         }
