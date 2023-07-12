@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,10 +10,17 @@ import (
 
 var Db *gorm.DB
 
+var (
+  DB_USER = os.Getenv("DB_USER")
+  DB_PASSWORD = os.Getenv("DB_PASSWORD")
+  DB_HOST = os.Getenv("DB_HOST")
+  DB_NAME = os.Getenv("DB_NAME")
+)
+
 func init() {
   var err error
 
-  dsn := "academy02:Zo.EbZjFLQxaNqs3o3M*@tcp(ca-go-academy-3.c9ml7do7yvmn.ap-northeast-1.rds.amazonaws.com)/academy02?parseTime=true"
+  dsn := DB_USER + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ")/" + DB_NAME + "?charset=utf8mb4&parseTime=True&loc=Local"
   Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
    if err != nil {
     log.Println("DB接続失敗")
