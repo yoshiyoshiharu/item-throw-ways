@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
