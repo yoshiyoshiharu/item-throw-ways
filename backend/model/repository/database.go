@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -21,6 +22,7 @@ func init() {
   var err error
 
   dsn := DB_USER + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ")/" + DB_NAME + "?charset=utf8mb4&parseTime=True&loc=Local"
+  fmt.Println(dsn)
   Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
    if err != nil {
     log.Println("DB接続失敗")
