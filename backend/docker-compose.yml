@@ -14,7 +14,7 @@ services:
       DB_USER: user
       DB_PASSWORD: password
       DB_HOST: db:3306
-      DB__DATABASE: test_db
+      DB_NAME: db
     depends_on:
       - db
   db:
