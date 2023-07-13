@@ -1,5 +1,11 @@
 {
+  "Parameters": {
+    "DB_USER": "",
+    "DB_PASSWORD": "",
+    "DB_NAME": "",
+    "DB_HOST": ""
+  },
   "UpdateItemsFunction": {
-    "HIRAGANA_TRANSLATION_APP_ID": "YOUR APP ID"
+    "HIRAGANA_TRANSLATION_APP_ID": "
   }
 }
