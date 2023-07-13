@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
 func TestHandler(t *testing.T) {
-  fmt.Println("test")  
+  repository.Db
 }
