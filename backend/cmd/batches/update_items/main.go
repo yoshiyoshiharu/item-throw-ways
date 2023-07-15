@@ -117,6 +117,7 @@ func updateItemsFromCsv() {
       for item := range itemChan {
         mu.Lock()
         if itemExists(item.Name, items) {
+          mu.Unlock()
           continue
         }
         items = append(items, *item)
