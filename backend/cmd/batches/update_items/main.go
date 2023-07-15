@@ -66,6 +66,8 @@ func updateItemsFromCsv() {
 	repository.Db.Exec("DELETE FROM items;")
 	repository.Db.Exec("DELETE FROM item_kinds;")
 
+  var items []entity.Item
+
 	for i, row := range rows {
 		item_id := i
 		item_name := row[1]
@@ -95,18 +97,11 @@ func updateItemsFromCsv() {
 
     item.Kinds = kinds
 
-<<<<<<< Updated upstream
-    start = time.Now()
-    repository.Db.Create(&item)
-    fmt.Println("CreateItem: ", time.Now().Sub(start))
-	}
-=======
     items = append(items, item)
   }
 
   repository.Db.Create(&items)
   fmt.Println("Batch: ", time.Now().Sub(startBatch))
->>>>>>> Stashed changes
 }
 
 func GetKindsFromCell(str string) []string {
