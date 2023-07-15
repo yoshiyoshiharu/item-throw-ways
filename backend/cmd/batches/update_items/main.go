@@ -27,7 +27,10 @@ const (
   HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
 )
 
-var itemRepository = repository.NewItemRepository()
+var (
+  items []entity.Item
+  allKinds []entity.Kind
+)
 
 type RequestBody struct {
   AppId string `json:"app_id"`
@@ -63,12 +66,6 @@ func updateItemsFromCsv() {
 		log.Fatal(err)
 	}
 
-	repository.Db.Exec("DELETE FROM items;")
-	repository.Db.Exec("DELETE FROM item_kinds;")
-
-  var items []entity.Item
-  var allKinds []entity.Kind
-
   repository.Db.Find(&allKinds)
 
 	for i, row := range rows {
@@ -78,13 +75,13 @@ func updateItemsFromCsv() {
 		kind_names := GetKindsFromCell(row[2])
 		price, _ := strconv.Atoi(row[3])
 		remarks := row[4]
+
     if err != nil {
       log.Fatal(err)
     }
 
     fmt.Println(item_id, item_name, item_kana, kind_names, price, remarks)
 
-		// ヘッダー行はスキップ
     start := time.Now()
 		if i == 0 || itemExists(item_name, items) {
 			continue
@@ -106,7 +103,10 @@ func updateItemsFromCsv() {
     items = append(items, item)
   }
 
+	repository.Db.Exec("DELETE FROM items;")
+	repository.Db.Exec("DELETE FROM item_kinds;")
   repository.Db.Create(&items)
+
   fmt.Println("Batch: ", time.Now().Sub(startBatch))
 }
 
@@ -164,4 +164,3 @@ func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
 
   return entity.Kind{}
 }
-
