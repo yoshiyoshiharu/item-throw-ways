@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
@@ -47,6 +48,7 @@ func main() {
 }
 
 func updateItemsFromCsv() {
+  startBatch := time.Now()
 	resp, err := http.Get(
 		API_URL,
 	)
@@ -78,19 +80,33 @@ func updateItemsFromCsv() {
     fmt.Println(item_id, item_name, item_kana, kind_names, price, remarks)
 
 		// ヘッダー行はスキップ
+    start := time.Now()
 		if i == 0 || itemRepository.ItemExists(item_name) {
 			continue
 		}
+    fmt.Println("ItemExist: ", time.Now().Sub(start))
 
     item := entity.Item{ID: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
     var kinds []entity.Kind
 
+    start = time.Now()
     repository.Db.Find(&kinds, "name IN ?", kind_names)
+    fmt.Println("FindKinds: ", time.Now().Sub(start))
 
     item.Kinds = kinds
 
+<<<<<<< Updated upstream
+    start = time.Now()
     repository.Db.Create(&item)
+    fmt.Println("CreateItem: ", time.Now().Sub(start))
 	}
+=======
+    items = append(items, item)
+  }
+
+  repository.Db.Create(&items)
+  fmt.Println("Batch: ", time.Now().Sub(startBatch))
+>>>>>>> Stashed changes
 }
 
 func GetKindsFromCell(str string) []string {
@@ -98,6 +114,8 @@ func GetKindsFromCell(str string) []string {
 }
 
 func TranslateToHiragana(name string) (string, error) {
+  start := time.Now()
+
   requestBody := &RequestBody{
     AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
     OutputType: "hiragana",
@@ -121,6 +139,8 @@ func TranslateToHiragana(name string) (string, error) {
 
   var responseBody ResponseBody
   json.NewDecoder(resp.Body).Decode(&responseBody)
+
+  fmt.Println("TranslateToHiragana: ", time.Now().Sub(start))
 
   return responseBody.Converted, nil
 }
