@@ -55,6 +55,10 @@ func updateCollectWeekdayFromCsv() {
 	repository.Db.Exec("DELETE FROM areas;")
 	repository.Db.Exec("DELETE FROM area_collect_weekdays;")
 
+  var allKinds []entity.Kind
+
+  repository.Db.Find(&allKinds)
+
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -78,16 +82,14 @@ func updateCollectWeekdayFromCsv() {
 			log.Fatal(err)
 		}
 
-		kanenKind := entity.Kind{}
-		repository.Db.Where("name = ?", "可燃ごみ").Limit(1).Find(&kanenKind)
 		kindWeekdays := map[string][]CollectWeekday{
 			"可燃ごみ": kanenWeekdays,
 			"不燃ごみ": funenWeekdays,
 			"資源":   []CollectWeekday{{shigenWeekday, 0}},
 		}
+
 		for kindName, weekdays := range kindWeekdays {
-			kind := entity.Kind{}
-			repository.Db.Where("name = ?", kindName).Limit(1).Find(&kind)
+			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
 				areaCollectWeekday := entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: weekday.Weekday, Lap: weekday.Lap}
 				repository.Db.Create(&areaCollectWeekday)
@@ -130,3 +132,14 @@ func splitNthWeekday(str string) []CollectWeekday {
 
 	return collectWeekdays
 }
+
+func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+  for _, kind := range allKinds {
+    if kind.Name == kindName {
+      return kind
+    }
+  }
+
+  return entity.Kind{}
+}
+

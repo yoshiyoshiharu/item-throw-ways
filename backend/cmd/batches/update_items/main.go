@@ -67,6 +67,9 @@ func updateItemsFromCsv() {
 	repository.Db.Exec("DELETE FROM item_kinds;")
 
   var items []entity.Item
+  var allKinds []entity.Kind
+
+  repository.Db.Find(&allKinds)
 
 	for i, row := range rows {
 		item_id := i
@@ -83,20 +86,23 @@ func updateItemsFromCsv() {
 
 		// ヘッダー行はスキップ
     start := time.Now()
-		if i == 0 || itemRepository.ItemExists(item_name) {
+		if i == 0 || itemExists(item_name, items) {
 			continue
 		}
-    fmt.Println("ItemExist: ", time.Now().Sub(start))
 
+    fmt.Println("ItemExist: ", time.Now().Sub(start))
     item := entity.Item{ID: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
-    var kinds []entity.Kind
 
     start = time.Now()
-    repository.Db.Find(&kinds, "name IN ?", kind_names)
+    var kinds []entity.Kind
+    for _, kindName := range kind_names {
+      kind := findKind(kindName, allKinds)
+      kinds = append(kinds, kind)
+    }
+
     fmt.Println("FindKinds: ", time.Now().Sub(start))
 
     item.Kinds = kinds
-
     items = append(items, item)
   }
 
@@ -139,3 +145,23 @@ func TranslateToHiragana(name string) (string, error) {
 
   return responseBody.Converted, nil
 }
+
+func itemExists(name string, items []entity.Item) bool {
+  for _, item := range items {
+    if item.Name == name {
+      return true
+    }
+  }
+  return false
+}
+
+func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+  for _, kind := range allKinds {
+    if kind.Name == kindName {
+      return kind
+    }
+  }
+
+  return entity.Kind{}
+}
+
