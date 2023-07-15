@@ -5,13 +5,12 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"time"
+	"sync"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
@@ -25,6 +24,7 @@ import (
 const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
   HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
+  CONCURRENCY = 10
 )
 
 var (
@@ -46,12 +46,17 @@ func handler(c context.Context) {
   updateItemsFromCsv()
 }
 
+func init() {
+  repository.Db.Find(&allKinds)
+}
+
 func main() {
   lambda.Start(handler)
 }
 
 func updateItemsFromCsv() {
-  startBatch := time.Now()
+  var items []entity.Item
+
 	resp, err := http.Get(
 		API_URL,
 	)
@@ -66,48 +71,65 @@ func updateItemsFromCsv() {
 		log.Fatal(err)
 	}
 
-  repository.Db.Find(&allKinds)
+  itemChan := make(chan *entity.Item)
+  var wg sync.WaitGroup
+  semaphore := make(chan struct{}, CONCURRENCY)
 
-	for i, row := range rows {
-		item_id := i
-		item_name := row[1]
-    item_kana, err := TranslateToHiragana(item_name)
-		kind_names := GetKindsFromCell(row[2])
-		price, _ := strconv.Atoi(row[3])
-		remarks := row[4]
+  insertId := 0
+	for _, row := range rows {
+    wg.Add(1)
+    semaphore <- struct{}{} // セマフォに空きがでるまでブロック
 
-    if err != nil {
-      log.Fatal(err)
-    }
+    insertId++
+    go func(insertId int, row []string) {
 
-    fmt.Println(item_id, item_name, item_kana, kind_names, price, remarks)
+      itemId := insertId
+      itemName := row[1]
+      kindNames := GetKindsFromCell(row[2])
+      price, _ := strconv.Atoi(row[3])
+      remarks := row[4]
 
-    start := time.Now()
-		if i == 0 || itemExists(item_name, items) {
-			continue
-		}
+      itemNameKana, err := TranslateToHiragana(itemName)
+      if err != nil {
+        log.Fatal(err)
+      }
 
-    fmt.Println("ItemExist: ", time.Now().Sub(start))
-    item := entity.Item{ID: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
+      var kinds []entity.Kind
+      for _, kindName := range kindNames {
+        kind := findKind(kindName, allKinds)
 
-    start = time.Now()
-    var kinds []entity.Kind
-    for _, kindName := range kind_names {
-      kind := findKind(kindName, allKinds)
-      kinds = append(kinds, kind)
-    }
+        kinds = append(kinds, kind)
+      }
 
-    fmt.Println("FindKinds: ", time.Now().Sub(start))
+      itemChan <- &entity.Item{
+        ID: itemId,
+        Name: itemName,
+        NameKana: itemNameKana,
+        Price: price,
+        Remarks: remarks,
+        Kinds: kinds,
+      }
 
-    item.Kinds = kinds
-    items = append(items, item)
+      <- semaphore
+      wg.Done()
+    }(insertId, row)
+
+    go func() {
+      for item := range itemChan {
+        if itemExists(item.Name, items) {
+          continue
+        }
+        items = append(items, *item)
+      }
+      close(itemChan)
+    }()
   }
 
-	repository.Db.Exec("DELETE FROM items;")
-	repository.Db.Exec("DELETE FROM item_kinds;")
-  repository.Db.Create(&items)
+  wg.Wait()
 
-  fmt.Println("Batch: ", time.Now().Sub(startBatch))
+  repository.Db.Exec("DELETE FROM items;")
+  repository.Db.Exec("DELETE FROM item_kinds;")
+  repository.Db.Create(&items)
 }
 
 func GetKindsFromCell(str string) []string {
@@ -115,8 +137,6 @@ func GetKindsFromCell(str string) []string {
 }
 
 func TranslateToHiragana(name string) (string, error) {
-  start := time.Now()
-
   requestBody := &RequestBody{
     AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
     OutputType: "hiragana",
@@ -141,8 +161,6 @@ func TranslateToHiragana(name string) (string, error) {
   var responseBody ResponseBody
   json.NewDecoder(resp.Body).Decode(&responseBody)
 
-  fmt.Println("TranslateToHiragana: ", time.Now().Sub(start))
-
   return responseBody.Converted, nil
 }
 
@@ -164,3 +182,4 @@ func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
 
   return entity.Kind{}
 }
+
