@@ -26,7 +26,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
   s := service.NewAreaCollectDateService()
-	areaCollectDates := s.GetByAreaWithAroundMonths(&area, year, month)
+	areaCollectDates := s.GetByAreaWithAroundMonths(area, year, month)
 
 	jsonBody, err := json.Marshal(areaCollectDates)
 

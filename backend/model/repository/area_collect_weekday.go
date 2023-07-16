@@ -6,17 +6,17 @@ import (
 )
 
 type AreaCollectWeekdayRepository interface {
-  FindByAreaId(areaId int) []*entity.AreaCollectWeekday
+  FindByAreaId(int) []*entity.AreaCollectWeekday
 }
 
 type areaCollectWeekdayRepository struct {}
 
-func NewAreaCollectWeekdaysRepository() *areaCollectWeekdayRepository {
+func NewAreaCollectWeekdayRepository() *areaCollectWeekdayRepository {
   return &areaCollectWeekdayRepository{}
 }
 
-func (r *areaCollectWeekdayRepository) FindByAreaId(areaId int) []entity.AreaCollectWeekday {
-  var areaCollectWeekdays []entity.AreaCollectWeekday
+func (r *areaCollectWeekdayRepository) FindByAreaId(areaId int) []*entity.AreaCollectWeekday {
+  var areaCollectWeekdays []*entity.AreaCollectWeekday
   database.Db.Joins("Kind").Joins("Area").Where("area_id = ?", areaId).Find(&areaCollectWeekdays)
 
   return areaCollectWeekdays

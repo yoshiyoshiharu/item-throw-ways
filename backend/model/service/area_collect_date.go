@@ -17,7 +17,9 @@ type areaCollectDateService struct {
 }
 
 func NewAreaCollectDateService() *areaCollectDateService {
-  return &areaCollectDateService{}
+  return &areaCollectDateService{
+    r: repository.NewAreaCollectWeekdayRepository(),
+  }
 }
 
 func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {

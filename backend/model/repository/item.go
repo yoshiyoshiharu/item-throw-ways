@@ -6,7 +6,7 @@ import (
 )
 
 type ItemRepository interface {
-  FindAll(areaId int) []*entity.Item
+  FindAll(int) []*entity.Item
 }
 
 type itemRepository struct {}
@@ -15,8 +15,8 @@ func NewItemsRepository() *itemRepository {
   return &itemRepository{}
 }
 
-func (r *itemRepository) FindAll() []entity.Item {
-  var items []entity.Item
+func (r *itemRepository) FindAll() []*entity.Item {
+  var items []*entity.Item
   database.Db.Preload("Kinds").Find(&items)
 
   return items
