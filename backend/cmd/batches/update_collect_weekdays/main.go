@@ -25,7 +25,7 @@ const (
 
 var (
   areas []entity.Area
-  allKinds []entity.Kind
+  allKinds []*entity.Kind
 )
 
 func init() {
@@ -74,7 +74,7 @@ func updateCollectWeekdayFromCsv() {
 		funen := row[3]
 		shigen := row[4]
 
-		area := entity.Area{ID: area_id, Name: town + street}
+    area := entity.NewArea(area_id, town + street)
 
 		kanenWeekdays := splitWeekday(kanen)
 		funenWeekdays := splitNthWeekday(funen)
@@ -92,7 +92,7 @@ func updateCollectWeekdayFromCsv() {
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
-        newAreaCollectWeekday := entity.NewAreaCollectWeekday(area, kind, weekday.Weekday, weekday.Lap)
+        newAreaCollectWeekday := entity.NewAreaCollectWeekday(*area, *kind, weekday.Weekday, weekday.Lap)
         areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
 			}
 		}
@@ -147,13 +147,13 @@ func splitNthWeekday(str string) []CollectWeekday {
 	return collectWeekdays
 }
 
-func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+func findKind(kindName string, allKinds []*entity.Kind) *entity.Kind {
   for _, kind := range allKinds {
     if kind.Name == kindName {
       return kind
     }
   }
 
-  return entity.Kind{}
+  return nil
 }
 
