@@ -75,7 +75,6 @@ func updateItemsFromCsv() {
   itemChan := make(chan *entity.Item)
   semaphore := make(chan struct{}, CONCURRENCY)
 
-  insertId := 0
 	for i, row := range rows {
     // ヘッダー行はスキップ
     if i == 0 {
@@ -85,7 +84,6 @@ func updateItemsFromCsv() {
     wg.Add(1)
     semaphore <- struct{}{} // セマフォに空きがでるまでブロック
 
-    insertId++
     go func(insertId int, row []string) {
       itemId := insertId
       itemName := row[1]
@@ -116,7 +114,7 @@ func updateItemsFromCsv() {
 
       <- semaphore
       wg.Done()
-    }(insertId, row)
+    }(i, row)
 
     go func() {
       for item := range itemChan {
