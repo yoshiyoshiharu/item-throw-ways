@@ -8,6 +8,9 @@ import { Item } from '../entity/item'
 import { Kind } from '../entity/kind'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:3000'
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const currentMonth = currentDate.getMonth() + 1
 
 export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
   const [areas, setAreas] = useState<Area[]>([])
@@ -32,15 +35,15 @@ export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
     setAreas(data)
   }
 
-  const fetchAreaCollectionDates = async (area_id: string) => {
-    const res = await fetch(BASE_URL + '/area_collect_dates?area_id=' + area_id)
+  const fetchAreaCollectionDates = async (area_id: string, year: string, month: string) => {
+    const res = await fetch(BASE_URL + '/area_collect_dates?area_id=' + area_id + '&year=' + year + '&month=' + month)
     const data = await res.json()
     setAreaCollectionDates(data)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const area_id = e.target.value
-    fetchAreaCollectionDates(area_id)
+    fetchAreaCollectionDates(area_id, currentYear.toString(), currentMonth.toString())
   }
 
   useEffect(() => {
