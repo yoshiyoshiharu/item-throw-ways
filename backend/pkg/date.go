@@ -76,3 +76,17 @@ func JaWeekdayToEn(ja string) (time.Weekday, error) {
 		return time.Sunday, errors.New("曜日の変換に失敗しました。")
   }
 }
+
+func PrevMonth(year int, month time.Month) (int, time.Month) {
+  if month == 1 {
+    return year - 1, 12
+  }
+  return year, month - 1
+}
+
+func NextMonth(year int, month time.Month) (int, time.Month) {
+  if month == 12 {
+    return year + 1, 1
+  }
+  return year, month + 1
+}

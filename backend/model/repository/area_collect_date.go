@@ -1,11 +1,14 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 )
 
 type AreaCollectDatesRepository interface {
+  GetAreaCollectDatesWithAroundMonthes(area entity.Area, year int, month time.Month) []entity.AreaCollectDate
   GetAreaCollectDates(area entity.Area) []entity.AreaCollectDate
 }
 
@@ -15,7 +18,22 @@ func NewAreaCollectDatesRepository() *areaCollectDatesRepository {
   return &areaCollectDatesRepository{}
 }
 
-func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area) []entity.AreaCollectDate {
+func (r *areaCollectDatesRepository) GetAreaCollectDatesWithAroundMonthes(area entity.Area, year int, month time.Month) []entity.AreaCollectDate {
+  prevYear, prevMonth := date.PrevMonth(year, month)
+  nextYear, nextMonth := date.NextMonth(year, month)
+
+  previousMonthAreaCollectDates := r.GetAreaCollectDates(area, prevYear, prevMonth)
+  currentMonthAreaCollectDates := r.GetAreaCollectDates(area, year, month)
+  nextMonthAreaCollectDates := r.GetAreaCollectDates(area, nextYear, nextMonth)
+
+  areaCollectDates := []entity.AreaCollectDate{}
+  areaCollectDates = append(areaCollectDates, previousMonthAreaCollectDates...)
+  areaCollectDates = append(areaCollectDates, currentMonthAreaCollectDates...)
+  areaCollectDates = append(areaCollectDates, nextMonthAreaCollectDates...)
+
+  return areaCollectDates
+}
+func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area, year int, month time.Month) []entity.AreaCollectDate {
   var areaCollectWeekdays []entity.AreaCollectWeekday
   var areaCollectDates []entity.AreaCollectDate
 
@@ -23,12 +41,12 @@ func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area) []ent
 
   for _, areaCollectWeekday := range areaCollectWeekdays {
     if areaCollectWeekday.Lap == 0 {
-      for _, date := range date.AllWeekdayDates(areaCollectWeekday.Weekday, 2023, 7) {
+      for _, date := range date.AllWeekdayDates(areaCollectWeekday.Weekday, year, month) {
         insertDate := entity.AreaCollectDate{Kind: areaCollectWeekday.Kind.Name, Date: date.Format("2006-01-02")}
         areaCollectDates = append(areaCollectDates, insertDate)
       }
     } else {
-      date, err := date.NthWeekdayDate(areaCollectWeekday.Lap, areaCollectWeekday.Weekday, 2023, 7)
+      date, err := date.NthWeekdayDate(areaCollectWeekday.Lap, areaCollectWeekday.Weekday, year, month)
       if err != nil {
         panic(err)
       }

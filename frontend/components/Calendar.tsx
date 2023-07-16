@@ -31,6 +31,11 @@ export default function Calendar({ areaCollectionDates }: { areaCollectionDates:
       events={events}
       contentHeight="auto"
       locale="ja"
-    /> 
+      headerToolbar={{
+        left:   'title',
+        center: '',
+        right:  ''
+      }}
+    />
   )
 }
