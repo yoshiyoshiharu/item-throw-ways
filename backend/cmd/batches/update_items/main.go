@@ -105,14 +105,14 @@ func updateItemsFromCsv() {
         kinds = append(kinds, kind)
       }
 
-      itemChan <- &entity.Item{
-        ID: itemId,
-        Name: itemName,
-        NameKana: itemNameKana,
-        Price: price,
-        Remarks: remarks,
-        Kinds: kinds,
-      }
+      itemChan <- entity.NewItem(
+        itemId,
+        itemName,
+        itemNameKana,
+        price,
+        remarks,
+        kinds,
+      )
 
       <- semaphore
       wg.Done()

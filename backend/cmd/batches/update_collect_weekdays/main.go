@@ -60,7 +60,7 @@ func updateCollectWeekdayFromCsv() {
 		log.Fatal(err)
 	}
 
-  var areaCollectWeekdays []entity.AreaCollectWeekday
+  var areaCollectWeekdays []*entity.AreaCollectWeekday
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -92,7 +92,8 @@ func updateCollectWeekdayFromCsv() {
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
-        areaCollectWeekdays = append(areaCollectWeekdays, entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: weekday.Weekday, Lap: weekday.Lap})
+        newAreaCollectWeekday := entity.NewAreaCollectWeekday(area, kind, weekday.Weekday, weekday.Lap)
+        areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
 			}
 		}
   }

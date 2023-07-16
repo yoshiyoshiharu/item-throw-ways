@@ -1,7 +1,7 @@
 include .env
 
 local_start_api:
-	sam build
+	sam build --no-cached
 	sam local start-api --docker-network go-academy --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
@@ -9,7 +9,7 @@ local_start_api:
 			DbHost=${DB_HOST_DEV}\
 			HiraganaTranslationAppId=${HIRAGANA_TRANSLATION_APP_ID_DEV}
 local_update_items:
-	sam build
+	sam build --no-cached
 	sam local invoke UpdateItemsFunction --docker-network go-academy --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
@@ -17,7 +17,7 @@ local_update_items:
 			DbHost=${DB_HOST_DEV}\
 			HiraganaTranslationAppId=${HIRAGANA_TRANSLATION_APP_ID_DEV}
 local_update_collect_weekdays:
-	sam build
+	sam build --no-cached
 	sam local invoke UpdateCollectWeekdaysFunction --docker-network go-academy --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
@@ -28,7 +28,7 @@ local_db_init:
 	mysql -h localhost -u ${DB_USER_DEV} -p -P 3306 -D ${DB_NAME_DEV} --protocol=tcp < ./db/init.sql
   
 deploy:
-	sam build
+	sam build --no-cached
 	sam deploy --parameter-overrides\
 			DbUser=${DB_USER}\
 			DbPassword=${DB_PASSWORD}\

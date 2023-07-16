@@ -5,16 +5,12 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  var items []entity.Item
-  err := database.Db.Find(&items).Order("id").Error
-  if err != nil {
-    return events.APIGatewayProxyResponse{}, err
-  }
+  r := repository.NewItemsRepository()
+  items := r.FindAll()
 
   jsonBody, err := json.Marshal(items)
 
