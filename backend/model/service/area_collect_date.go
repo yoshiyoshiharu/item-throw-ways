@@ -9,7 +9,7 @@ import (
 )
 
 type AreaCollectDateService interface {
-  GetByAreaWithAroundMonths(area entity.Area, year int, month time.Month) []entity.AreaCollectDate
+  GetByAreaWithAroundMonths(entity.Area, int, time.Month) []entity.AreaCollectDate
 }
 
 type areaCollectDateService struct {
