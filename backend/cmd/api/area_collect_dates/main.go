@@ -15,10 +15,7 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
-	year, err := strconv.Atoi(request.QueryStringParameters["year"])
-	monthInt, err := strconv.Atoi(request.QueryStringParameters["month"])
-  month, err := intToMonth(monthInt)
+  area_id, year, month, err := parseParams(request)
   if err != nil {
     return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
   }
@@ -51,6 +48,19 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 func main() {
 	lambda.Start(handler)
 }
+
+func parseParams(request events.APIGatewayProxyRequest) (int, int, time.Month, error) {
+	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
+	year, err := strconv.Atoi(request.QueryStringParameters["year"])
+	monthInt, err := strconv.Atoi(request.QueryStringParameters["month"])
+  month, err := intToMonth(monthInt)
+
+  if err != nil {
+    return 0, 0, 0, err
+  }
+  return area_id, year, month, nil
+}
+
 
 func intToMonth(monthInt int) (time.Month, error) {
 	if monthInt < 1 || monthInt > 12 {
