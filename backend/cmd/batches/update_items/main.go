@@ -15,7 +15,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 	"gorm.io/gorm"
 
 	"golang.org/x/text/encoding/japanese"
@@ -50,7 +50,7 @@ func handler(c context.Context) {
 }
 
 func init() {
-  repository.Db.Find(&allKinds)
+  database.Db.Find(&allKinds)
 }
 
 func main() {
@@ -134,8 +134,7 @@ func updateItemsFromCsv() {
 
   wg.Wait()
 
-  tx := repository.Db.Begin()
-  err = tx.Transaction(func(tx *gorm.DB) error {
+  database.Db.Transaction(func(tx *gorm.DB) error {
     if err := tx.Exec("DELETE FROM items").Error; err != nil {
       return err
     }
@@ -147,12 +146,6 @@ func updateItemsFromCsv() {
     }
     return nil
   })
-
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  tx.Commit()
 }
 
 func GetKindsFromCell(str string) []string {
