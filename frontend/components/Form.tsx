@@ -4,13 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { Item } from '../entity/item'
 import { toHiragana } from 'wanakana'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:3000'
+
 export default function Form({ handleTargetItem }: { handleTargetItem: (item: Item) => void; }) {
   const [allItems, setAllItems] = useState<Item[]>([])
   const [items, setItems] = useState<Item[]>([])
   const [inputValue, setInputValue] = useState('')
 
   const fetchItems = async () => {
-    const response = await fetch('http://127.0.0.1:3000/items')
+    const response = await fetch(BASE_URL + '/items')
     const data = await response.json()
     setAllItems(data)
     setItems(data)

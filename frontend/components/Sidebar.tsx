@@ -7,6 +7,8 @@ import { AreaCollectionDate } from '../entity/area_collection_date'
 import { Item } from '../entity/item'
 import { Kind } from '../entity/kind'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:3000'
+
 export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
   const [areas, setAreas] = useState<Area[]>([])
   const [areaCollectionDates, setAreaCollectionDates] = useState<AreaCollectionDate[]>([])
@@ -25,13 +27,13 @@ export default function Sidebar({ targetItem }: { targetItem: Item | null }) {
   }
 
   const fetchAreas = async () => {
-    const response = await fetch('http://127.0.0.1:3000/areas')
+    const response = await fetch(BASE_URL + '/areas')
     const data = await response.json()
     setAreas(data)
   }
 
   const fetchAreaCollectionDates = async (area_id: string) => {
-    const res = await fetch('http://127.0.0.1:3000/area_collect_dates?area_id=' + area_id)
+    const res = await fetch(BASE_URL + '/area_collect_dates?area_id=' + area_id)
     const data = await res.json()
     setAreaCollectionDates(data)
   }
