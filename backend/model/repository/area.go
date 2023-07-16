@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+import (
+	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
+)
 
 type AreaRepository interface {
   GetAreas() ([]entity.Area, error)
@@ -14,7 +17,7 @@ func NewAreaRepository() AreaRepository {
 
 func (r *areaRepository) GetAreas() ([]entity.Area, error) {
   var areas []entity.Area
-  Db.Find(&areas)
+  database.Db.Find(&areas)
 
   return areas, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 )
 
 type AreaCollectDatesRepository interface {
@@ -37,7 +38,7 @@ func (r *areaCollectDatesRepository) GetAreaCollectDates(area entity.Area, year 
   var areaCollectWeekdays []entity.AreaCollectWeekday
   var areaCollectDates []entity.AreaCollectDate
 
-  Db.Joins("Kind").Where("area_id = ?", area.ID).Find(&areaCollectWeekdays)
+  database.Db.Joins("Kind").Where("area_id = ?", area.ID).Find(&areaCollectWeekdays)
 
   for _, areaCollectWeekday := range areaCollectWeekdays {
     if areaCollectWeekday.Lap == 0 {

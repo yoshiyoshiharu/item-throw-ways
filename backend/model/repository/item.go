@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 )
 
 type ItemRepository interface {
@@ -16,7 +17,7 @@ func NewItemRepository() ItemRepository {
 
 func (r *itemRepository) GetItems() ([]entity.Item, error) {
   var items []entity.Item
-  Db.Preload("Kinds").Find(&items)
+  database.Db.Preload("Kinds").Find(&items)
 
   return items, nil
 }

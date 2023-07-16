@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -23,7 +24,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
   }
 
 	var area entity.Area
-  err = repository.Db.Where("id = ?", area_id).First(&area).Error
+  err = database.Db.Where("id = ?", area_id).First(&area).Error
 
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
