@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -13,8 +15,11 @@ import (
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
+	year, err := strconv.Atoi(request.QueryStringParameters["year"])
+	monthInt, err := strconv.Atoi(request.QueryStringParameters["month"])
+  month, err := intToMonth(monthInt)
   if err != nil {
-    return events.APIGatewayProxyResponse{}, errors.New("area_id or kind_id is empty")
+    return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
   }
 
 	var area entity.Area
@@ -25,7 +30,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	repository := repository.NewAreaCollectDatesRepository()
-	areaCollectDates := repository.GetAreaCollectDates(area)
+	areaCollectDates := repository.GetAreaCollectDates(area, year, month)
 
 	jsonBody, err := json.Marshal(areaCollectDates)
 
@@ -45,3 +50,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 func main() {
 	lambda.Start(handler)
 }
+
+func intToMonth(monthInt int) (time.Month, error) {
+	if monthInt < 1 || monthInt > 12 {
+		return 0, fmt.Errorf("Invalid month: %d", monthInt)
+	}
+	return time.Month(monthInt), nil
+}
+
