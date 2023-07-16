@@ -12,11 +12,11 @@ Globals:
     MemorySize: 128
     Environment:
       Variables:
-        DB_USER: DB_USER
-        DB_PASSWORD: DB_PASSWORD
-        DB_NAME: DB_NAME
-        DB_HOST: DB_HOST
-
+        DB_USER: !Ref DbUser
+        DB_PASSWORD: !Ref DbPassword
+        DB_NAME: !Ref DbName
+        DB_HOST: !Ref DbHost
+        HIRAGANA_TRANSLATION_APP_ID: !Ref HiraganaTranslationAppId
 Resources:
   GetAreasFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -73,7 +73,7 @@ Resources:
         ScheduleEvent:
           Type: Schedule
           Properties:
-            Schedule: rate(1 minute)
+            Schedule: rate(1 day)
       Timeout: 300
       Environment:
         Variables:
@@ -89,17 +89,32 @@ Resources:
         ScheduleEvent:
           Type: Schedule
           Properties:
-            Schedule: rate(1 minute)
-      Timeout: 3000
+            Schedule: rate(1 day)
+      Timeout: 300
       Role: arn:aws:iam::880843126767:role/go-academy-lambda
+Parameters:
+  DbUser:
+    Type: String
+  DbPassword:
+    Type: String
+  DbName:
+    Type: String
+  DbHost:
+    Type: String
+  HiraganaTranslationAppId:
+    Type: String
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldAPI:
+  GetAreasAPI:
     Description: "API Gateway endpoint URL for Prod environment for First Function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "First Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/areas/"
+  GetAreasAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/"
+  GetAreaCollectDatesAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/area_collect_dates/"
+

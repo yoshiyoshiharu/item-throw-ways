@@ -1,22 +1,6 @@
 version: '3'
 
 services:
-  web:
-    build:
-      context: .
-    tty: true
-    ports:
-      - 8080:8080
-    volumes:
-      - .:/go/src
-    environment:
-      GOPATH: /go
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_HOST: db:3306
-      DB_NAME: db
-    depends_on:
-      - db
   db:
     image: mysql:latest
     ports:
@@ -28,5 +12,12 @@ services:
       MYSQL_DATABASE: db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    networks:
+        - external
 volumes:
   go_academy:
+networks:
+  external:
+    driver: bridge
+    internal: false
+    name: go-academy
