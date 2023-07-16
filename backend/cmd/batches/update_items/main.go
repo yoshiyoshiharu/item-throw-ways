@@ -5,17 +5,18 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"gorm.io/gorm"
 
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -24,9 +25,15 @@ import (
 const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
   HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
+  CONCURRENCY = 10
 )
 
-var itemRepository = repository.NewItemRepository()
+var (
+  items []entity.Item
+  allKinds []entity.Kind
+  mu sync.Mutex
+  wg sync.WaitGroup
+)
 
 type RequestBody struct {
   AppId string `json:"app_id"`
@@ -40,6 +47,10 @@ type ResponseBody struct {
 
 func handler(c context.Context) {
   updateItemsFromCsv()
+}
+
+func init() {
+  repository.Db.Find(&allKinds)
 }
 
 func main() {
@@ -61,36 +72,82 @@ func updateItemsFromCsv() {
 		log.Fatal(err)
 	}
 
-	repository.Db.Exec("DELETE FROM items;")
-	repository.Db.Exec("DELETE FROM item_kinds;")
+  itemChan := make(chan *entity.Item)
+  semaphore := make(chan struct{}, CONCURRENCY)
 
-	for i, row := range rows {
-		item_id := i
-		item_name := row[1]
-    item_kana, err := TranslateToHiragana(item_name)
-		kind_names := GetKindsFromCell(row[2])
-		price, _ := strconv.Atoi(row[3])
-		remarks := row[4]
-    if err != nil {
-      log.Fatal(err)
+  insertId := 0
+	for _, row := range rows {
+    wg.Add(1)
+    semaphore <- struct{}{} // セマフォに空きがでるまでブロック
+
+    insertId++
+    go func(insertId int, row []string) {
+      itemId := insertId
+      itemName := row[1]
+      kindNames := GetKindsFromCell(row[2])
+      price, _ := strconv.Atoi(row[3])
+      remarks := row[4]
+
+      itemNameKana, err := TranslateToHiragana(itemName)
+      if err != nil {
+        log.Fatal(err)
+      }
+
+      var kinds []entity.Kind
+      for _, kindName := range kindNames {
+        kind := findKind(kindName, allKinds)
+
+        kinds = append(kinds, kind)
+      }
+
+      itemChan <- &entity.Item{
+        ID: itemId,
+        Name: itemName,
+        NameKana: itemNameKana,
+        Price: price,
+        Remarks: remarks,
+        Kinds: kinds,
+      }
+
+      <- semaphore
+      wg.Done()
+    }(insertId, row)
+
+    go func() {
+      for item := range itemChan {
+        mu.Lock()
+        if itemExists(item.Name, items) {
+          mu.Unlock()
+          continue
+        }
+        items = append(items, *item)
+        mu.Unlock()
+      }
+      close(itemChan)
+    }()
+  }
+
+  wg.Wait()
+
+  tx := repository.Db.Begin()
+  err = tx.Transaction(func(tx *gorm.DB) error {
+    if err := tx.Exec("DELETE FROM items").Error; err != nil {
+      return err
     }
+    if err := tx.Exec("DELETE FROM item_kinds").Error; err != nil {
+      return err
+    }
+    if err := tx.Create(&items).Error; err != nil {
+      return err
+    }
+    return nil
+  })
 
-    fmt.Println(item_id, item_name, item_kana, kind_names, price, remarks)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-		// ヘッダー行はスキップ
-		if i == 0 || itemRepository.ItemExists(item_name) {
-			continue
-		}
-
-    item := entity.Item{ID: item_id, Name: item_name, NameKana: item_kana, Price: price, Remarks: remarks}
-    var kinds []entity.Kind
-
-    repository.Db.Find(&kinds, "name IN ?", kind_names)
-
-    item.Kinds = kinds
-
-    repository.Db.Create(&item)
-	}
+  tx.Commit()
 }
 
 func GetKindsFromCell(str string) []string {
@@ -124,3 +181,23 @@ func TranslateToHiragana(name string) (string, error) {
 
   return responseBody.Converted, nil
 }
+
+func itemExists(name string, items []entity.Item) bool {
+  for _, item := range items {
+    if item.Name == name {
+      return true
+    }
+  }
+  return false
+}
+
+func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+  for _, kind := range allKinds {
+    if kind.Name == kindName {
+      return kind
+    }
+  }
+
+  return entity.Kind{}
+}
+
