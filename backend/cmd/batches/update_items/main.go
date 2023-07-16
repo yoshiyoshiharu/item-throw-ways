@@ -76,7 +76,12 @@ func updateItemsFromCsv() {
   semaphore := make(chan struct{}, CONCURRENCY)
 
   insertId := 0
-	for _, row := range rows {
+	for i, row := range rows {
+    // ヘッダー行はスキップ
+    if i == 0 {
+      continue
+    }
+
     wg.Add(1)
     semaphore <- struct{}{} // セマフォに空きがでるまでブロック
 
