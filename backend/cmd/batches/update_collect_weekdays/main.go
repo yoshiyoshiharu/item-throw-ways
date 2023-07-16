@@ -12,17 +12,25 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
+	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
+	"gorm.io/gorm"
 )
 
 const (
 	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
 )
 
-var itemRepository = repository.NewItemRepository()
+var (
+  areas []entity.Area
+  allKinds []entity.Kind
+)
+
+func init() {
+  database.Db.Find(&allKinds)
+}
 
 func handler(c context.Context) {
 	updateCollectWeekdayFromCsv()
@@ -52,13 +60,7 @@ func updateCollectWeekdayFromCsv() {
 		log.Fatal(err)
 	}
 
-	repository.Db.Exec("DELETE FROM areas;")
-	repository.Db.Exec("DELETE FROM area_collect_weekdays;")
-
-  var allKinds []entity.Kind
-
-  repository.Db.Find(&allKinds)
-
+  var areaCollectWeekdays []entity.AreaCollectWeekday
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -73,7 +75,6 @@ func updateCollectWeekdayFromCsv() {
 		shigen := row[4]
 
 		area := entity.Area{ID: area_id, Name: town + street}
-		repository.Db.Create(&area)
 
 		kanenWeekdays := splitWeekday(kanen)
 		funenWeekdays := splitNthWeekday(funen)
@@ -91,11 +92,23 @@ func updateCollectWeekdayFromCsv() {
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
-				areaCollectWeekday := entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: weekday.Weekday, Lap: weekday.Lap}
-				repository.Db.Create(&areaCollectWeekday)
+        areaCollectWeekdays = append(areaCollectWeekdays, entity.AreaCollectWeekday{Area: area, Kind: kind, Weekday: weekday.Weekday, Lap: weekday.Lap})
 			}
 		}
-	}
+  }
+
+  database.Db.Transaction(func(tx *gorm.DB) error {
+    if err := tx.Exec("DELETE FROM areas").Error; err != nil {
+      return err
+    }
+    if err := tx.Exec("DELETE FROM area_collect_weekdays").Error; err != nil {
+      return err
+    }
+    if err := tx.Create(&areaCollectWeekdays).Error; err != nil {
+      return err
+    }
+    return nil
+  })
 }
 
 func splitWeekday(str string) []CollectWeekday {
