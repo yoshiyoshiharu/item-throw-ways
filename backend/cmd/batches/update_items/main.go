@@ -15,7 +15,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	"gorm.io/gorm"
 
 	"golang.org/x/text/encoding/japanese"
@@ -29,8 +29,6 @@ const (
 )
 
 var (
-  items []entity.Item
-  allKinds []entity.Kind
   mu sync.Mutex
   wg sync.WaitGroup
 )
@@ -49,15 +47,15 @@ func handler(c context.Context) {
   updateItemsFromCsv()
 }
 
-func init() {
-  database.Db.Find(&allKinds)
-}
-
 func main() {
   lambda.Start(handler)
 }
 
 func updateItemsFromCsv() {
+  var items []entity.Item
+  kr := repository.NewKindRepository()
+  allKinds := kr.FindAll()
+
 	resp, err := http.Get(
 		API_URL,
 	)
@@ -100,7 +98,7 @@ func updateItemsFromCsv() {
       for _, kindName := range kindNames {
         kind := findKind(kindName, allKinds)
 
-        kinds = append(kinds, kind)
+        kinds = append(kinds, *kind)
       }
 
       itemChan <- entity.NewItem(
@@ -131,7 +129,7 @@ func updateItemsFromCsv() {
 
   wg.Wait()
 
-  database.Db.Transaction(func(tx *gorm.DB) error {
+  repository.Db.Transaction(func(tx *gorm.DB) error {
     if err := tx.Exec("DELETE FROM items").Error; err != nil {
       return err
     }
@@ -186,13 +184,13 @@ func itemExists(name string, items []entity.Item) bool {
   return false
 }
 
-func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+func findKind(kindName string, allKinds []*entity.Kind) *entity.Kind {
   for _, kind := range allKinds {
     if kind.Name == kindName {
       return kind
     }
   }
 
-  return entity.Kind{}
+  return nil
 }
 

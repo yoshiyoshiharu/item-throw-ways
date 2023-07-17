@@ -9,8 +9,8 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  r := repository.NewAreaRepository()
-  areas := r.FindAll()
+  areaRepository := repository.NewAreaRepository()
+  areas := areaRepository.FindAll()
 
   jsonBody, err := json.Marshal(areas)
   if err != nil {
