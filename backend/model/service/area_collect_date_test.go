@@ -10,7 +10,7 @@ import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 )
 
-func TestGetByAreaWithAroundMonths(t *testing.T) {
+func TestAreaCollectDateService_GetByAreaWithAroundMonths(t *testing.T) {
   mockCtrl := gomock.NewController(t)
   defer mockCtrl.Finish()
 
