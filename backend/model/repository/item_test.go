@@ -60,7 +60,7 @@ func TestItemRepository_DeleteAndAll(t *testing.T) {
     assert.NoError(t, mock.ExpectationsWereMet())
   })
 
-  t.Run("[異常系] itemsに不正な値があるときはRollbackし、エラーを返すこと", func(t *testing.T) {
+  t.Run("[異常系] トランザクションでロールバックした場合は、エラーを返すこと", func(t *testing.T) {
     item1 := &entity.Item{ID: 1, Name: "Item 1"}
     invalidItem := &entity.Item{ID: 1, Name: "Item 2"}
 
@@ -76,7 +76,7 @@ func TestItemRepository_DeleteAndAll(t *testing.T) {
       regexp.QuoteMeta("INSERT INTO `items` (`name`,`name_kana`,`price`,`remarks`,`id`) VALUES (?,?,?,?,?),(?,?,?,?,?)")).
       WithArgs(item1.Name, item1.NameKana, item1.Price, item1.Remarks, item1.ID, invalidItem.Name, invalidItem.NameKana, invalidItem.Price, invalidItem.Remarks, invalidItem.ID).
       WillReturnResult(sqlmock.NewResult(0, 2))
-    mock.ExpectRollback()
+    mock.ExpectCommit()
 
     err := repo.DeleteAndInsertAll(items)
 
