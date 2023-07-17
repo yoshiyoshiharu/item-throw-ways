@@ -20,6 +20,8 @@ func TestNthWeekdayDate(t *testing.T) {
     {3, "木曜日", 2023, 7, time.Date(2023, 7, 20, 0, 0, 0, 0, loc)},
     {4, "土曜日", 2023, 6, time.Date(2023, 6, 24, 0, 0, 0, 0, loc)},
     {2, "土曜日", 2023, 8, time.Date(2023, 8, 12, 0, 0, 0, 0, loc)},
+    {1, "土曜日", 2023, 7, time.Date(2023, 7, 1, 0, 0, 0, 0, loc)},
+    {5, "月曜日", 2023, 7, time.Date(2023, 7, 31, 0, 0, 0, 0, loc)},
   }
 
   for _, test := range tests {
@@ -31,4 +33,9 @@ func TestNthWeekdayDate(t *testing.T) {
       assert.Equal(t, test.want, result)
     })
   }
+
+  t.Run("[異常系]存在しない日付になるとエラーを返す", func(t *testing.T) {
+    _, err := NthWeekdayDate(6, 6, 2023, 7)
+    assert.Error(t, err)
+  })
 }
