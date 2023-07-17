@@ -49,7 +49,7 @@ func AllWeekdayDates(wd time.Weekday, year int, month time.Month) []time.Time {
 	var dates []time.Time
 	for i := 0; i < 5; i++ {
 		if firstWeekday.AddDate(0, 0, 7*i).Month() == firstDay.Month() {
-			dates = append(dates, firstWeekday.AddDate(0, 0, 7*i+1))
+			dates = append(dates, firstWeekday.AddDate(0, 0, 7*i))
 		}
 	}
 
