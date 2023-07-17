@@ -5,22 +5,9 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
-func newMockDB() (*gorm.DB, sqlmock.Sqlmock) {
-  db, mock, _ := sqlmock.New()
-
-  gormDB, _ := gorm.Open(mysql.New(mysql.Config{
-		Conn: db,
-    SkipInitializeWithVersion: true,
-	}), &gorm.Config{})
-  
-  return gormDB, mock
-}
-
-func TestFindAll(t *testing.T) {
+func TestAreaRepository_FindAll(t *testing.T) {
   gormDB, mock := newMockDB()
 
   repo := NewAreaRepository(gormDB)
@@ -43,7 +30,7 @@ func TestFindAll(t *testing.T) {
 }
 
 
-func TestFindById(t *testing.T) {
+func TestAreaRepository_FindById(t *testing.T) {
   gormDB, mock := newMockDB()
 
   repo := NewAreaRepository(gormDB)
