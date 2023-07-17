@@ -13,8 +13,8 @@ func TestAreaRepository_FindAll(t *testing.T) {
   repo := NewAreaRepository(gormDB)
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
-		AddRow(1, "テストエリア1").
-		AddRow(2, "テストエリア2")
+		AddRow(1, "Area 1").
+		AddRow(2, "Area 2")
 
 	mock.ExpectQuery("SELECT \\* FROM `areas`").WillReturnRows(rows)
 
@@ -22,8 +22,8 @@ func TestAreaRepository_FindAll(t *testing.T) {
 
   t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
     assert.Equal(t, 2, len(areas))
-    assert.Equal(t, "テストエリア1", areas[0].Name)
-    assert.Equal(t, "テストエリア2", areas[1].Name)
+    assert.Equal(t, "Area 1", areas[0].Name)
+    assert.Equal(t, "Area 2", areas[1].Name)
 
     assert.NoError(t, mock.ExpectationsWereMet())
   })
@@ -36,14 +36,14 @@ func TestAreaRepository_FindById(t *testing.T) {
   repo := NewAreaRepository(gormDB)
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
-		AddRow(1, "テストエリア1")
+		AddRow(1, "Area 1")
 
 	mock.ExpectQuery("SELECT \\* FROM `areas` WHERE id = ?").WithArgs(1).WillReturnRows(rows)
 
 	area, _ := repo.FindById(1)
 
   t.Run("[正常系] FindByIdは指定したIDのエリアを返すこと", func(t *testing.T) {
-    assert.Equal(t, "テストエリア1", area.Name)
+    assert.Equal(t, "Area 1", area.Name)
 
     assert.NoError(t, mock.ExpectationsWereMet())
   })
