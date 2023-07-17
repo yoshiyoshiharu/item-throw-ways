@@ -118,11 +118,10 @@ func updateItemsFromCsv() {
 
     go func() {
       for item := range itemChan {
-        mu.Lock()
         if itemExists(item.Name, items) {
-          mu.Unlock()
           continue
         }
+        mu.Lock()
         items = append(items, *item)
         mu.Unlock()
       }
