@@ -1,6 +1,7 @@
 package date
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -22,7 +23,7 @@ func TestNthWeekdayDate(t *testing.T) {
   }
 
   for _, test := range tests {
-    t.Run("lap番目の" + test.weekday + "の日付を返す", func(t *testing.T) {
+    t.Run("[正常系]" + strconv.Itoa(test.year) + "年" + strconv.Itoa(int(test.month)) + "月の第" + strconv.Itoa(test.lap) + test.weekday + "の日付を返す", func(t *testing.T) {
       weekday, _ := JaWeekdayToEn(test.weekday)
       result, err := NthWeekdayDate(test.lap, weekday, test.year, test.month)
 
