@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
+	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -134,32 +137,31 @@ func GetKindsFromCell(str string) []string {
 }
 
 func TranslateToHiragana(name string) (string, error) {
-  // requestBody := &RequestBody{
-  //   AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
-  //   OutputType: "hiragana",
-  //   Sentence: name,
-  // }
-  //
-  // jsonString, err := json.Marshal(requestBody)
-  // if err != nil {
-  //   return "", err
-  // }
-  //
-  // req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
-  // req.Header.Set("Content-Type", "application/json")
-  // client := new(http.Client)
-  // resp, err := client.Do(req)
-  // if err != nil {
-  //   return "", err
-  // }
-  //
-  // defer resp.Body.Close()
-  //
-  // var responseBody ResponseBody
-  // json.NewDecoder(resp.Body).Decode(&responseBody)
-  //
-  // return responseBody.Converted, nil
-  return "aaa", nil
+  requestBody := &RequestBody{
+    AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
+    OutputType: "hiragana",
+    Sentence: name,
+  }
+
+  jsonString, err := json.Marshal(requestBody)
+  if err != nil {
+    return "", err
+  }
+
+  req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+  req.Header.Set("Content-Type", "application/json")
+  client := new(http.Client)
+  resp, err := client.Do(req)
+  if err != nil {
+    return "", err
+  }
+
+  defer resp.Body.Close()
+
+  var responseBody ResponseBody
+  json.NewDecoder(resp.Body).Decode(&responseBody)
+
+  return responseBody.Converted, nil
 }
 
 func itemExists(name string, items []*entity.Item) bool {
