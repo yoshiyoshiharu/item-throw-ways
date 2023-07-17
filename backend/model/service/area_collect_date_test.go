@@ -85,7 +85,7 @@ func TestGetByAreaWithAroundMonths(t *testing.T) {
 
   mockAreaCollectWeekdayRepository.EXPECT().FindByAreaId(area.ID).Return(mockAreaCollectWeekdays)
 
-  s := NewAreaCollectDateService()
+  s := NewAreaCollectDateService(mockAreaCollectWeekdayRepository)
   result := s.GetByAreaWithAroundMonths(area, year, month)
 
   assert.ElementsMatch(t, expected, result)

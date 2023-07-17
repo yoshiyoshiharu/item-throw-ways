@@ -23,12 +23,14 @@ func NewAreaCollectDateService(repo repository.AreaCollectWeekdayRepository) *ar
 }
 
 func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {
+	areaCollectWeekdays := s.r.FindByAreaId(area.ID)
+
 	prevYear, prevMonth := date.PrevMonth(year, month)
 	nextYear, nextMonth := date.NextMonth(year, month)
 
-	previousMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(area, prevYear, prevMonth)
-	currentMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(area, year, month)
-	nextMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(area, nextYear, nextMonth)
+	previousMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, prevYear, prevMonth)
+	currentMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, year, month)
+	nextMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, nextYear, nextMonth)
 	if err != nil {
 		return nil
 	}
@@ -41,14 +43,13 @@ func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, ye
 	return areaCollectDates
 }
 
-func (s *areaCollectDateService) getByAreaCollectWeekdays(area *entity.Area, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
+func (s *areaCollectDateService) getByAreaCollectWeekdays(areaCollectWeekdays []*entity.AreaCollectWeekday, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
 	var areaCollectDates []*entity.AreaCollectDate
-	areaCollectWeekdays := s.r.FindByAreaId(area.ID)
 
 	for _, areaCollectWeekday := range areaCollectWeekdays {
 		if areaCollectWeekday.Lap == 0 {
 			for _, date := range date.AllWeekdayDates(areaCollectWeekday.Weekday, year, month) {
-				newAreaCollectDate := entity.NewAreaCollectDate(areaCollectWeekday.Kind, date.Format("2006-01-02"), *area)
+				newAreaCollectDate := entity.NewAreaCollectDate(areaCollectWeekday.Kind, date.Format("2006-01-02"), *&areaCollectWeekday.Area)
 				areaCollectDates = append(areaCollectDates, newAreaCollectDate)
 			}
 		} else {
@@ -57,7 +58,7 @@ func (s *areaCollectDateService) getByAreaCollectWeekdays(area *entity.Area, yea
 				return nil, err
 			}
 
-			newAreaCollectDate := entity.NewAreaCollectDate(areaCollectWeekday.Kind, date.Format("2006-01-02"), *area)
+			newAreaCollectDate := entity.NewAreaCollectDate(areaCollectWeekday.Kind, date.Format("2006-01-02"), *&areaCollectWeekday.Area)
 			areaCollectDates = append(areaCollectDates, newAreaCollectDate)
 		}
 	}
