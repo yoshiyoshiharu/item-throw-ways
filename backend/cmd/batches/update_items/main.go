@@ -112,7 +112,7 @@ func updateItemsFromCsv() {
 
     go func() {
       for item := range itemChan {
-        if itemExists(item, items) {
+        if itemExists(item.Name, items) {
           continue
         }
         mu.Lock()
@@ -158,12 +158,16 @@ func TranslateToHiragana(name string) (string, error) {
   // var responseBody ResponseBody
   // json.NewDecoder(resp.Body).Decode(&responseBody)
   //
-  return responseBody.Converted, nil
+  // return responseBody.Converted, nil
+  return "aaa", nil
 }
 
-func itemExists(item *entity.Item, items []*entity.Item) bool {
+func itemExists(name string, items []*entity.Item) bool {
   for _, item := range items {
-    if item == item{
+    if item == nil {
+      return false
+    }
+    if name == item.Name {
       return true
     }
   }
