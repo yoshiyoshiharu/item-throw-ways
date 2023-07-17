@@ -14,18 +14,18 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  area_id, year, month, err := parseParams(request)
-  if err != nil {
-    return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
-  }
+	area_id, year, month, err := parseParams(request)
+	if err != nil {
+		return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
+	}
 
-  areaRepository := repository.NewAreaRepository()
-  area, err := areaRepository.FindById(area_id)
+	areaRepository := repository.NewAreaRepository()
+	area, err := areaRepository.FindById(area_id)
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
 	}
 
-  s := service.NewAreaCollectDateService()
+	s := service.NewAreaCollectDateService()
 	areaCollectDates := s.GetByAreaWithAroundMonths(area, year, month)
 
 	jsonBody, err := json.Marshal(areaCollectDates)
@@ -51,14 +51,13 @@ func parseParams(request events.APIGatewayProxyRequest) (int, int, time.Month, e
 	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
 	year, err := strconv.Atoi(request.QueryStringParameters["year"])
 	monthInt, err := strconv.Atoi(request.QueryStringParameters["month"])
-  month, err := intToMonth(monthInt)
+	month, err := intToMonth(monthInt)
 
-  if err != nil {
-    return 0, 0, 0, err
-  }
-  return area_id, year, month, nil
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	return area_id, year, month, nil
 }
-
 
 func intToMonth(monthInt int) (time.Month, error) {
 	if monthInt < 1 || monthInt > 12 {
@@ -66,4 +65,3 @@ func intToMonth(monthInt int) (time.Month, error) {
 	}
 	return time.Month(monthInt), nil
 }
-

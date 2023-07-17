@@ -9,18 +9,18 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  areaRepository := repository.NewAreaRepository()
-  areas := areaRepository.FindAll()
+	areaRepository := repository.NewAreaRepository()
+	areas := areaRepository.FindAll()
 
-  jsonBody, err := json.Marshal(areas)
-  if err != nil {
-    return events.APIGatewayProxyResponse{}, err
-  }
+	jsonBody, err := json.Marshal(areas)
+	if err != nil {
+		return events.APIGatewayProxyResponse{}, err
+	}
 
 	return events.APIGatewayProxyResponse{
-    Headers: map[string]string{
-      "Access-Control-Allow-Origin": "*",
-    },
+		Headers: map[string]string{
+			"Access-Control-Allow-Origin": "*",
+		},
 		Body:       string(jsonBody),
 		StatusCode: 200,
 	}, nil
