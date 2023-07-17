@@ -27,7 +27,7 @@ func NthWeekdayDate(lap int, wd time.Weekday, year int, month time.Month) (time.
 		firstWeekday = firstWeekday.AddDate(0, 0, 7)
 	}
 
-	nthWeekday := firstWeekday.AddDate(0, 0, 7*(lap-1)+1)
+	nthWeekday := firstWeekday.AddDate(0, 0, 7*(lap-1))
 
 	if nthWeekday.Month() != firstDay.Month() {
 		err := fmt.Errorf("%d年%d月の第%d %sは存在しません。", year, month, lap, wd)
