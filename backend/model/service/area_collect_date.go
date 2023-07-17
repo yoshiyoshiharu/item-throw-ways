@@ -16,9 +16,9 @@ type areaCollectDateService struct {
 	r repository.AreaCollectWeekdayRepository
 }
 
-func NewAreaCollectDateService() *areaCollectDateService {
+func NewAreaCollectDateService(repo repository.AreaCollectWeekdayRepository) *areaCollectDateService {
 	return &areaCollectDateService{
-		r: repository.NewAreaCollectWeekdayRepository(),
+		r: repo,
 	}
 }
 

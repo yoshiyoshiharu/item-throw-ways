@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
@@ -41,7 +42,12 @@ type CollectWeekday struct {
 }
 
 func updateCollectWeekdayFromCsv() {
-	kindRepository := repository.NewKindRepository()
+  db, err := database.Connect()
+  if err != nil {
+    log.Fatal(err)
+  }
+
+	kindRepository := repository.NewKindRepository(db)
 	allKinds = kindRepository.FindAll()
 
 	resp, err := http.Get(
@@ -90,13 +96,13 @@ func updateCollectWeekdayFromCsv() {
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
-				newAreaCollectWeekday := entity.NewAreaCollectWeekday(*area, *kind, weekday.Weekday, weekday.Lap)
+				newAreaCollectWeekday := entity.NewAreaCollectWeekday(area, kind, weekday.Weekday, weekday.Lap)
 				areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
 			}
 		}
 	}
 
-	areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository()
+	areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository(db)
 	areaCollectWeekdayRepository.DeleteAndInsertAll(areaCollectWeekdays)
 }
 

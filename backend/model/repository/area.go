@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"gorm.io/gorm"
 )
 
 type AreaRepository interface {
@@ -9,22 +10,24 @@ type AreaRepository interface {
 	FindById(int) (*entity.Area, error)
 }
 
-type areaRepository struct{}
+type areaRepository struct{
+  db *gorm.DB
+}
 
-func NewAreaRepository() *areaRepository {
-	return &areaRepository{}
+func NewAreaRepository(db *gorm.DB) *areaRepository {
+	return &areaRepository{db: db}
 }
 
 func (r *areaRepository) FindAll() []*entity.Area {
 	var areas []*entity.Area
-	Db.Find(&areas)
+	r.db.Find(&areas)
 
 	return areas
 }
 
 func (r *areaRepository) FindById(id int) (*entity.Area, error) {
 	var area *entity.Area
-	err := Db.Where("id = ?", id).First(&area).Error
+	err := r.db.Where("id = ?", id).First(&area).Error
 	if err != nil {
 		return nil, err
 	}

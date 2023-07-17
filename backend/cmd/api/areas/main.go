@@ -5,11 +5,17 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	areaRepository := repository.NewAreaRepository()
+  db, err := database.Connect()
+  if err != nil {
+    return events.APIGatewayProxyResponse{}, err
+  }
+
+	areaRepository := repository.NewAreaRepository(db)
 	areas := areaRepository.FindAll()
 
 	jsonBody, err := json.Marshal(areas)

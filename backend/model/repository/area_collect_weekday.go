@@ -11,22 +11,24 @@ type AreaCollectWeekdayRepository interface {
 	FindByAreaId(int) []*entity.AreaCollectWeekday
 }
 
-type areaCollectWeekdayRepository struct{}
+type areaCollectWeekdayRepository struct{
+  db *gorm.DB
+}
 
-func NewAreaCollectWeekdayRepository() *areaCollectWeekdayRepository {
-	return &areaCollectWeekdayRepository{}
+func NewAreaCollectWeekdayRepository(db *gorm.DB) *areaCollectWeekdayRepository {
+  return &areaCollectWeekdayRepository{db: db}
 }
 
 func (r *areaCollectWeekdayRepository) FindByAreaId(areaId int) []*entity.AreaCollectWeekday {
 	var areaCollectWeekdays []*entity.AreaCollectWeekday
-	Db.Joins("Kind").Joins("Area").Where("area_id = ?", areaId).Find(&areaCollectWeekdays)
+	r.db.Joins("Kind").Joins("Area").Where("area_id = ?", areaId).Find(&areaCollectWeekdays)
 
 	return areaCollectWeekdays
 }
 
 func (r *areaCollectWeekdayRepository) DeleteAndInsertAll(areaCollectWeekdays []*entity.AreaCollectWeekday) error {
 	fmt.Println(areaCollectWeekdays)
-	err := Db.Transaction(func(tx *gorm.DB) error {
+	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM areas").Error; err != nil {
 			return err
 		}
