@@ -5,18 +5,18 @@ import (
 )
 
 type KindRepository interface {
-  FindAll(int) []*entity.Kind
+	FindAll(int) []*entity.Kind
 }
 
-type kindRepository struct {}
+type kindRepository struct{}
 
 func NewKindRepository() *kindRepository {
-  return &kindRepository{}
+	return &kindRepository{}
 }
 
 func (r *kindRepository) FindAll() []*entity.Kind {
-  var kinds []*entity.Kind
-  Db.Preload("Kinds").Find(&kinds)
+	var kinds []*entity.Kind
+	Db.Preload("Kinds").Find(&kinds)
 
-  return kinds
+	return kinds
 }

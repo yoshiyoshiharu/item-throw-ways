@@ -23,8 +23,8 @@ const (
 )
 
 var (
-  areas []entity.Area
-  allKinds []*entity.Kind
+	areas    []entity.Area
+	allKinds []*entity.Kind
 )
 
 func handler(c context.Context) {
@@ -41,8 +41,8 @@ type CollectWeekday struct {
 }
 
 func updateCollectWeekdayFromCsv() {
-  kindRepository := repository.NewKindRepository()
-  allKinds = kindRepository.FindAll()
+	kindRepository := repository.NewKindRepository()
+	allKinds = kindRepository.FindAll()
 
 	resp, err := http.Get(
 		API_URL,
@@ -58,7 +58,7 @@ func updateCollectWeekdayFromCsv() {
 		log.Fatal(err)
 	}
 
-  var areaCollectWeekdays []*entity.AreaCollectWeekday
+	var areaCollectWeekdays []*entity.AreaCollectWeekday
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -72,7 +72,7 @@ func updateCollectWeekdayFromCsv() {
 		funen := row[3]
 		shigen := row[4]
 
-    area := entity.NewArea(area_id, town + street)
+		area := entity.NewArea(area_id, town+street)
 
 		kanenWeekdays := splitWeekday(kanen)
 		funenWeekdays := splitNthWeekday(funen)
@@ -90,14 +90,14 @@ func updateCollectWeekdayFromCsv() {
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
-        newAreaCollectWeekday := entity.NewAreaCollectWeekday(*area, *kind, weekday.Weekday, weekday.Lap)
-        areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
+				newAreaCollectWeekday := entity.NewAreaCollectWeekday(*area, *kind, weekday.Weekday, weekday.Lap)
+				areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
 			}
 		}
-  }
+	}
 
-  areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository()
-  areaCollectWeekdayRepository.DeleteAndInsertAll(areaCollectWeekdays)
+	areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository()
+	areaCollectWeekdayRepository.DeleteAndInsertAll(areaCollectWeekdays)
 }
 
 func splitWeekday(str string) []CollectWeekday {
@@ -136,12 +136,11 @@ func splitNthWeekday(str string) []CollectWeekday {
 }
 
 func findKind(kindName string, allKinds []*entity.Kind) *entity.Kind {
-  for _, kind := range allKinds {
-    if kind.Name == kindName {
-      return kind
-    }
-  }
+	for _, kind := range allKinds {
+		if kind.Name == kindName {
+			return kind
+		}
+	}
 
-  return nil
+	return nil
 }
-
