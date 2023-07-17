@@ -5,7 +5,7 @@ type Kind struct {
 	Name string `json:"name"`
 }
 
-func NewKind(id int, name string, items []Item) *Kind {
+func NewKind(id int, name string) *Kind {
 	return &Kind{
 		ID:   id,
 		Name: name,

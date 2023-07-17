@@ -2,21 +2,24 @@ package repository
 
 import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"gorm.io/gorm"
 )
 
 type KindRepository interface {
 	FindAll(int) []*entity.Kind
 }
 
-type kindRepository struct{}
+type kindRepository struct{
+  db *gorm.DB
+}
 
-func NewKindRepository() *kindRepository {
-	return &kindRepository{}
+func NewKindRepository(db *gorm.DB) *kindRepository {
+  return &kindRepository{db: db}
 }
 
 func (r *kindRepository) FindAll() []*entity.Kind {
 	var kinds []*entity.Kind
-	Db.Preload("Kinds").Find(&kinds)
+	r.db.Preload("Kinds").Find(&kinds)
 
 	return kinds
 }

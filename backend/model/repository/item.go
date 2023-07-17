@@ -9,21 +9,23 @@ type ItemRepository interface {
 	FindAll(int) []*entity.Item
 }
 
-type itemRepository struct{}
+type itemRepository struct{
+  db *gorm.DB
+}
 
-func NewItemRepository() *itemRepository {
-	return &itemRepository{}
+func NewItemRepository(db *gorm.DB) *itemRepository {
+  return &itemRepository{db: db}
 }
 
 func (r *itemRepository) FindAll() []*entity.Item {
 	var items []*entity.Item
-	Db.Preload("Kinds").Find(&items)
+	r.db.Preload("Kinds").Find(&items)
 
 	return items
 }
 
 func (r *itemRepository) DeleteAndInsertAll(items []*entity.Item) error {
-	err := Db.Transaction(func(tx *gorm.DB) error {
+	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM items").Error; err != nil {
 			return err
 		}

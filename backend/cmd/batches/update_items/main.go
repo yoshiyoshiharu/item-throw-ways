@@ -14,6 +14,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 
@@ -51,8 +52,13 @@ func main() {
 }
 
 func updateItemsFromCsv() {
+  db, err := database.Connect()
+  if err != nil {
+    log.Fatal(err)
+  }
+
 	var items []*entity.Item
-	kr := repository.NewKindRepository()
+	kr := repository.NewKindRepository(db)
 	allKinds := kr.FindAll()
 
 	resp, err := http.Get(
@@ -128,7 +134,7 @@ func updateItemsFromCsv() {
 
 	wg.Wait()
 
-	itemRepository := repository.NewItemRepository()
+	itemRepository := repository.NewItemRepository(db)
 	itemRepository.DeleteAndInsertAll(items)
 }
 

@@ -18,10 +18,10 @@ export default function Calendar({ areaCollectionDates }: { areaCollectionDates:
 
   const events = areaCollectionDates.map((areaCollectionDate: AreaCollectionDate) => {
     return {
-      title: areaCollectionDate.kind,
+      title: areaCollectionDate.kind.name,
       start: areaCollectionDate.date,
-      backgroundColor: backgroundColor(areaCollectionDate.kind),
-      borderColor: backgroundColor(areaCollectionDate.kind)
+      backgroundColor: backgroundColor(areaCollectionDate.kind.name),
+      borderColor: backgroundColor(areaCollectionDate.kind.name)
     }
   });
 

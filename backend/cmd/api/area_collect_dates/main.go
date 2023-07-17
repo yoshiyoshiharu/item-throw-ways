@@ -9,23 +9,30 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/service"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+  db, err := database.Connect()
+  if err != nil {
+    return events.APIGatewayProxyResponse{}, err
+  }
+
 	area_id, year, month, err := parseParams(request)
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
 	}
 
-	areaRepository := repository.NewAreaRepository()
+	areaRepository := repository.NewAreaRepository(db)
 	area, err := areaRepository.FindById(area_id)
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
 	}
 
-	s := service.NewAreaCollectDateService()
+  areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository(db)
+	s := service.NewAreaCollectDateService(areaCollectWeekdayRepository)
 	areaCollectDates := s.GetByAreaWithAroundMonths(area, year, month)
 
 	jsonBody, err := json.Marshal(areaCollectDates)

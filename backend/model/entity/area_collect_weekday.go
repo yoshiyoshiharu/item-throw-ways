@@ -14,12 +14,12 @@ type AreaCollectWeekday struct {
 	Lap     int          `json:"lap"`
 }
 
-func NewAreaCollectWeekday(area Area, kind Kind, weekday time.Weekday, lap int) *AreaCollectWeekday {
+func NewAreaCollectWeekday(area *Area, kind *Kind, weekday time.Weekday, lap int) *AreaCollectWeekday {
 	return &AreaCollectWeekday{
 		AreaId:  area.ID,
-		Area:    area,
+		Area:    *area,
 		KindId:  kind.ID,
-		Kind:    kind,
+		Kind:    *kind,
 		Weekday: weekday,
 		Lap:     lap,
 	}
