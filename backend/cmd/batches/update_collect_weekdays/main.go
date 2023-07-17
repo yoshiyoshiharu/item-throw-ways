@@ -12,11 +12,10 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
-	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
-	"gorm.io/gorm"
 )
 
 const (
@@ -27,10 +26,6 @@ var (
   areas []entity.Area
   allKinds []*entity.Kind
 )
-
-func init() {
-  database.Db.Find(&allKinds)
-}
 
 func handler(c context.Context) {
 	updateCollectWeekdayFromCsv()
@@ -46,6 +41,9 @@ type CollectWeekday struct {
 }
 
 func updateCollectWeekdayFromCsv() {
+  kindRepository := repository.NewKindRepository()
+  allKinds = kindRepository.FindAll()
+
 	resp, err := http.Get(
 		API_URL,
 	)
@@ -98,18 +96,8 @@ func updateCollectWeekdayFromCsv() {
 		}
   }
 
-  database.Db.Transaction(func(tx *gorm.DB) error {
-    if err := tx.Exec("DELETE FROM areas").Error; err != nil {
-      return err
-    }
-    if err := tx.Exec("DELETE FROM area_collect_weekdays").Error; err != nil {
-      return err
-    }
-    if err := tx.Create(&areaCollectWeekdays).Error; err != nil {
-      return err
-    }
-    return nil
-  })
+  areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository()
+  areaCollectWeekdayRepository.DeleteAndInsertAll(areaCollectWeekdays)
 }
 
 func splitWeekday(str string) []CollectWeekday {

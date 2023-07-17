@@ -15,8 +15,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/pkg/database"
-	"gorm.io/gorm"
+	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
 
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -29,8 +28,6 @@ const (
 )
 
 var (
-  items []entity.Item
-  allKinds []entity.Kind
   mu sync.Mutex
   wg sync.WaitGroup
 )
@@ -49,15 +46,15 @@ func handler(c context.Context) {
   updateItemsFromCsv()
 }
 
-func init() {
-  database.Db.Find(&allKinds)
-}
-
 func main() {
   lambda.Start(handler)
 }
 
 func updateItemsFromCsv() {
+  var items []*entity.Item
+  kr := repository.NewKindRepository()
+  allKinds := kr.FindAll()
+
 	resp, err := http.Get(
 		API_URL,
 	)
@@ -100,7 +97,7 @@ func updateItemsFromCsv() {
       for _, kindName := range kindNames {
         kind := findKind(kindName, allKinds)
 
-        kinds = append(kinds, kind)
+        kinds = append(kinds, *kind)
       }
 
       itemChan <- entity.NewItem(
@@ -122,7 +119,7 @@ func updateItemsFromCsv() {
           continue
         }
         mu.Lock()
-        items = append(items, *item)
+        items = append(items, item)
         mu.Unlock()
       }
       close(itemChan)
@@ -131,18 +128,8 @@ func updateItemsFromCsv() {
 
   wg.Wait()
 
-  database.Db.Transaction(func(tx *gorm.DB) error {
-    if err := tx.Exec("DELETE FROM items").Error; err != nil {
-      return err
-    }
-    if err := tx.Exec("DELETE FROM item_kinds").Error; err != nil {
-      return err
-    }
-    if err := tx.Create(&items).Error; err != nil {
-      return err
-    }
-    return nil
-  })
+  itemRepository := repository.NewItemRepository()
+  itemRepository.DeleteAndInsertAll(items)
 }
 
 func GetKindsFromCell(str string) []string {
@@ -177,22 +164,25 @@ func TranslateToHiragana(name string) (string, error) {
   return responseBody.Converted, nil
 }
 
-func itemExists(name string, items []entity.Item) bool {
+func itemExists(name string, items []*entity.Item) bool {
   for _, item := range items {
-    if item.Name == name {
+    if item == nil {
+      return false
+    }
+    if name == item.Name {
       return true
     }
   }
   return false
 }
 
-func findKind(kindName string, allKinds []entity.Kind) entity.Kind {
+func findKind(kindName string, allKinds []*entity.Kind) *entity.Kind {
   for _, kind := range allKinds {
     if kind.Name == kindName {
       return kind
     }
   }
 
-  return entity.Kind{}
+  return nil
 }
 

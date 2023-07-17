@@ -19,8 +19,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
     return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
   }
 
-  r := repository.NewAreaRepository()
-  area, err := r.FindById(area_id)
+  areaRepository := repository.NewAreaRepository()
+  area, err := areaRepository.FindById(area_id)
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
 	}

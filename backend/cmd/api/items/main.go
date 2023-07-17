@@ -9,8 +9,8 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  r := repository.NewItemsRepository()
-  items := r.FindAll()
+  itemRepository := repository.NewItemRepository()
+  items := itemRepository.FindAll()
 
   jsonBody, err := json.Marshal(items)
 
