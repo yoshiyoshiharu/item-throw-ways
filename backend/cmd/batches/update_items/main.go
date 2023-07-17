@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/csv"
-	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,7 +13,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
-	"gorm.io/gorm"
 
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -52,7 +48,7 @@ func main() {
 }
 
 func updateItemsFromCsv() {
-  var items []entity.Item
+  var items []*entity.Item
   kr := repository.NewKindRepository()
   allKinds := kr.FindAll()
 
@@ -116,11 +112,11 @@ func updateItemsFromCsv() {
 
     go func() {
       for item := range itemChan {
-        if itemExists(item.Name, items) {
+        if itemExists(item, items) {
           continue
         }
         mu.Lock()
-        items = append(items, *item)
+        items = append(items, item)
         mu.Unlock()
       }
       close(itemChan)
@@ -129,18 +125,8 @@ func updateItemsFromCsv() {
 
   wg.Wait()
 
-  repository.Db.Transaction(func(tx *gorm.DB) error {
-    if err := tx.Exec("DELETE FROM items").Error; err != nil {
-      return err
-    }
-    if err := tx.Exec("DELETE FROM item_kinds").Error; err != nil {
-      return err
-    }
-    if err := tx.Create(&items).Error; err != nil {
-      return err
-    }
-    return nil
-  })
+  itemRepository := repository.NewItemRepository()
+  itemRepository.DeleteAndInsertAll(items)
 }
 
 func GetKindsFromCell(str string) []string {
@@ -148,36 +134,36 @@ func GetKindsFromCell(str string) []string {
 }
 
 func TranslateToHiragana(name string) (string, error) {
-  requestBody := &RequestBody{
-    AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
-    OutputType: "hiragana",
-    Sentence: name,
-  }
-
-  jsonString, err := json.Marshal(requestBody)
-  if err != nil {
-    return "", err
-  }
-
-  req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
-  req.Header.Set("Content-Type", "application/json")
-  client := new(http.Client)
-  resp, err := client.Do(req)
-  if err != nil {
-    return "", err
-  }
-
-  defer resp.Body.Close()
-
-  var responseBody ResponseBody
-  json.NewDecoder(resp.Body).Decode(&responseBody)
-
+  // requestBody := &RequestBody{
+  //   AppId: os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
+  //   OutputType: "hiragana",
+  //   Sentence: name,
+  // }
+  //
+  // jsonString, err := json.Marshal(requestBody)
+  // if err != nil {
+  //   return "", err
+  // }
+  //
+  // req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+  // req.Header.Set("Content-Type", "application/json")
+  // client := new(http.Client)
+  // resp, err := client.Do(req)
+  // if err != nil {
+  //   return "", err
+  // }
+  //
+  // defer resp.Body.Close()
+  //
+  // var responseBody ResponseBody
+  // json.NewDecoder(resp.Body).Decode(&responseBody)
+  //
   return responseBody.Converted, nil
 }
 
-func itemExists(name string, items []entity.Item) bool {
+func itemExists(item *entity.Item, items []*entity.Item) bool {
   for _, item := range items {
-    if item.Name == name {
+    if item == item{
       return true
     }
   }

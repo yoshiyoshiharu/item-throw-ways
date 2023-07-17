@@ -16,7 +16,6 @@ import (
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
-	"gorm.io/gorm"
 )
 
 const (
@@ -97,18 +96,8 @@ func updateCollectWeekdayFromCsv() {
 		}
   }
 
-  repository.Db.Transaction(func(tx *gorm.DB) error {
-    if err := tx.Exec("DELETE FROM areas").Error; err != nil {
-      return err
-    }
-    if err := tx.Exec("DELETE FROM area_collect_weekdays").Error; err != nil {
-      return err
-    }
-    if err := tx.Create(&areaCollectWeekdays).Error; err != nil {
-      return err
-    }
-    return nil
-  })
+  areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository()
+  areaCollectWeekdayRepository.DeleteAndInsertAll(areaCollectWeekdays)
 }
 
 func splitWeekday(str string) []CollectWeekday {
