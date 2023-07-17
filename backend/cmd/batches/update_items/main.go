@@ -144,7 +144,7 @@ func GetKindsFromCell(str string) []string {
 
 func TranslateToHiragana(name string) (string, error) {
 	requestBody := &RequestBody{
-		AppId:      os.Getenv("HIRAGANA_TRANSLATION_APP_ID"),
+		AppId:      os.Getenv("HIRAGANA_TRANSLATE_APP_ID"),
 		OutputType: "hiragana",
 		Sentence:   name,
 	}

@@ -16,7 +16,7 @@ Globals:
         DB_PASSWORD: !Ref DbPassword
         DB_NAME: !Ref DbName
         DB_HOST: !Ref DbHost
-        HIRAGANA_TRANSLATION_APP_ID: !Ref HiraganaTranslationAppId
+        HIRAGANA_TRANSLATE_APP_ID: !Ref HiraganaTranslationAppId
 Resources:
   GetAreasFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
