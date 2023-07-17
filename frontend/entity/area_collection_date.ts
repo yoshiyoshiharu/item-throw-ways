@@ -1,5 +1,7 @@
+import { Kind } from './kind';
+
 export type AreaCollectionDate = {
-  kind: string;
+  kind: Kind;
   date: string;
 }
 
