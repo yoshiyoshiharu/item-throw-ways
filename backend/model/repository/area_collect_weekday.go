@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 	"gorm.io/gorm"
 )
@@ -27,7 +25,6 @@ func (r *areaCollectWeekdayRepository) FindByAreaId(areaId int) []*entity.AreaCo
 }
 
 func (r *areaCollectWeekdayRepository) DeleteAndInsertAll(areaCollectWeekdays []*entity.AreaCollectWeekday) error {
-	fmt.Println(areaCollectWeekdays)
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM areas").Error; err != nil {
 			return err

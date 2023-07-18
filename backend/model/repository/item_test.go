@@ -31,7 +31,7 @@ func TestItemRepository_FindAll(t *testing.T) {
   })
 }
 
-func TestItemRepository_DeleteAndAll(t *testing.T) {
+func TestItemRepository_DeleteAndInsertAll(t *testing.T) {
   gormDB, mock := newMockDB()
 
   repo := NewItemRepository(gormDB)
