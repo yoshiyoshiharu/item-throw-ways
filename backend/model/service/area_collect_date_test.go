@@ -10,7 +10,7 @@ import (
 	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
 )
 
-func TestGetByAreaWithAroundMonths(t *testing.T) {
+func TestAreaCollectDateService_GetByAreaWithAroundMonths(t *testing.T) {
   mockCtrl := gomock.NewController(t)
   defer mockCtrl.Finish()
 
@@ -35,6 +35,7 @@ func TestGetByAreaWithAroundMonths(t *testing.T) {
   }
 
   expected := []*entity.AreaCollectDate{
+    entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 6, 2, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 6, 6, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 6, 9, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 6, 13, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
@@ -52,8 +53,6 @@ func TestGetByAreaWithAroundMonths(t *testing.T) {
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 7, 25, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 7, 28, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 1, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
-    entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 4, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
-    entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 4, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 4, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 8, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
     entity.NewAreaCollectDate(*kinds["kanen"], time.Date(2023, 8, 11, 0, 0, 0, 0, loc).Format("2006-01-02"), *area),
@@ -88,5 +87,7 @@ func TestGetByAreaWithAroundMonths(t *testing.T) {
   s := NewAreaCollectDateService(mockAreaCollectWeekdayRepository)
   result := s.GetByAreaWithAroundMonths(area, year, month)
 
-  assert.ElementsMatch(t, result, expected)
+  t.Run("[正常系] 指定した年月の前月と来月を含めた日付の配列を返す", func(t *testing.T) {
+    assert.ElementsMatch(t, expected, result)
+  })
 }

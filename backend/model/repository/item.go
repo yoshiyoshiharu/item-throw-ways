@@ -24,6 +24,7 @@ func (r *itemRepository) FindAll() []*entity.Item {
 	return items
 }
 
+// Rollbackできていないかもしれないので修正する
 func (r *itemRepository) DeleteAndInsertAll(items []*entity.Item) error {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM items").Error; err != nil {
