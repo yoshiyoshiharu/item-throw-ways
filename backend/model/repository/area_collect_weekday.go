@@ -35,7 +35,7 @@ func (r *areaCollectWeekdayRepository) DeleteAndInsertAll(areaCollectWeekdays []
 		if err := tx.Exec("DELETE FROM area_collect_weekdays").Error; err != nil {
 			return err
 		}
-		if err := tx.Create(&areaCollectWeekdays).Error; err != nil {
+		if err := tx.Omit("Kind").Create(&areaCollectWeekdays).Error; err != nil {
 			return err
 		}
 		return nil
