@@ -29,7 +29,7 @@ var (
 )
 
 func handler(c context.Context) {
-	updateCollectWeekdayFromCsv()
+	updateAreaCollectWeekdayFromCsv()
 }
 
 func main() {
@@ -41,7 +41,7 @@ type CollectWeekday struct {
 	Lap     int
 }
 
-func updateCollectWeekdayFromCsv() {
+func updateAreaCollectWeekdayFromCsv() {
   db, err := database.Connect()
   if err != nil {
     log.Fatal(err)
