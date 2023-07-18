@@ -108,6 +108,7 @@ func updateAreaCollectWeekdayFromCsv() {
 
 func splitWeekday(str string) []CollectWeekday {
 	var collectWeekdays []CollectWeekday
+  // 月曜日・金曜日 からweekdayを抜き出す
 	weekdays := strings.Split(str, "・")
 
 	for _, weekday := range weekdays {
@@ -124,7 +125,7 @@ func splitWeekday(str string) []CollectWeekday {
 
 func splitNthWeekday(str string) []CollectWeekday {
 	var collectWeekdays []CollectWeekday
-	// 第2・第4火曜日 から nとweekdayを抜き出す
+	// 第2・第4火曜日 から lapとweekdayを抜き出す
 	reg := regexp.MustCompile(`第(\d+)・第(\d+)(\D+)`)
 	matches := reg.FindStringSubmatch(str)
 
