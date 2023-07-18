@@ -8,29 +8,29 @@ import (
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 )
 
-type AreaCollectDateService interface {
-	GetByAreaWithAroundMonths(entity.Area, int, time.Month) []entity.AreaCollectDate
+type AreaCollectWeekdayService interface {
+	ConvertByAreaWithAroundMonths(entity.Area, int, time.Month) []entity.AreaCollectDate
 }
 
-type areaCollectDateService struct {
+type areaCollectWeekdayService struct {
 	r repository.AreaCollectWeekdayRepository
 }
 
-func NewAreaCollectDateService(repo repository.AreaCollectWeekdayRepository) *areaCollectDateService {
-	return &areaCollectDateService{
+func NewAreaCollectWeekdayService(repo repository.AreaCollectWeekdayRepository) *areaCollectWeekdayService {
+	return &areaCollectWeekdayService{
 		r: repo,
 	}
 }
 
-func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {
+func (s *areaCollectWeekdayService) ConvertByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {
 	areaCollectWeekdays := s.r.FindByAreaId(area.ID)
 
 	prevYear, prevMonth := date.PrevMonth(year, month)
 	nextYear, nextMonth := date.NextMonth(year, month)
 
-	previousMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, prevYear, prevMonth)
-	currentMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, year, month)
-	nextMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, nextYear, nextMonth)
+	previousMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, prevYear, prevMonth)
+	currentMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, year, month)
+	nextMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, nextYear, nextMonth)
 	if err != nil {
 		return nil
 	}
@@ -43,7 +43,7 @@ func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, ye
 	return areaCollectDates
 }
 
-func (s *areaCollectDateService) getByAreaCollectWeekdays(areaCollectWeekdays []*entity.AreaCollectWeekday, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
+func (s *areaCollectWeekdayService) convertFromAreaCollectWeekdays(areaCollectWeekdays []*entity.AreaCollectWeekday, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
 	var areaCollectDates []*entity.AreaCollectDate
 
 	for _, areaCollectWeekday := range areaCollectWeekdays {
