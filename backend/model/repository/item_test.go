@@ -20,12 +20,12 @@ func TestItemRepository_FindAll(t *testing.T) {
 
 	mock.ExpectQuery("SELECT \\* FROM `items`").WillReturnRows(rows)
 
-	areas := repo.FindAll()
+	items := repo.FindAll()
 
   t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
-    assert.Equal(t, 2, len(areas))
-    assert.Equal(t, "Item 1", areas[0].Name)
-    assert.Equal(t, "Item 2", areas[1].Name)
+    assert.Equal(t, 2, len(items))
+    assert.Equal(t, "Item 1", items[0].Name)
+    assert.Equal(t, "Item 2", items[1].Name)
 
     assert.NoError(t, mock.ExpectationsWereMet())
   })
@@ -76,7 +76,7 @@ func TestItemRepository_DeleteAndAll(t *testing.T) {
       regexp.QuoteMeta("INSERT INTO `items` (`name`,`name_kana`,`price`,`remarks`,`id`) VALUES (?,?,?,?,?),(?,?,?,?,?)")).
       WithArgs(item1.Name, item1.NameKana, item1.Price, item1.Remarks, item1.ID, invalidItem.Name, invalidItem.NameKana, invalidItem.Price, invalidItem.Remarks, invalidItem.ID).
       WillReturnResult(sqlmock.NewResult(0, 2))
-    mock.ExpectCommit()
+    mock.ExpectRollback()
 
     err := repo.DeleteAndInsertAll(items)
 
