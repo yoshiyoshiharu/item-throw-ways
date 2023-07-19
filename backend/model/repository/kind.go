@@ -6,7 +6,7 @@ import (
 )
 
 type KindRepository interface {
-	FindAll(int) []*entity.Kind
+	FindAll() []*entity.Kind
 }
 
 type kindRepository struct{
