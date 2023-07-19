@@ -9,7 +9,7 @@ import (
 )
 
 type AreaCollectWeekdayService interface {
-	ConvertByAreaWithAroundMonths(int, int, time.Month) []entity.AreaCollectDate
+	ConvertByAreaWithAroundMonths(int, int, time.Month) []*entity.AreaCollectDate
 }
 
 type areaCollectWeekdayService struct {
