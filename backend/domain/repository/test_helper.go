@@ -13,7 +13,7 @@ func newMockDB() (*gorm.DB, sqlmock.Sqlmock) {
 		Conn: db,
     SkipInitializeWithVersion: true,
 	}), &gorm.Config{})
-  
+
   return gormDB, mock
 }
 

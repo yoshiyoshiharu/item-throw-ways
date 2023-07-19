@@ -3,34 +3,35 @@ package service
 import (
 	"time"
 
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 )
 
-type AreaCollectDateService interface {
-	GetByAreaWithAroundMonths(entity.Area, int, time.Month) []entity.AreaCollectDate
+type AreaCollectWeekdayService interface {
+	ConvertByAreaWithAroundMonths(int, int, time.Month) []*entity.AreaCollectDate
 }
 
-type areaCollectDateService struct {
+type areaCollectWeekdayService struct {
 	r repository.AreaCollectWeekdayRepository
 }
 
-func NewAreaCollectDateService(repo repository.AreaCollectWeekdayRepository) *areaCollectDateService {
-	return &areaCollectDateService{
+func NewAreaCollectWeekdayService(repo repository.AreaCollectWeekdayRepository) *areaCollectWeekdayService {
+	return &areaCollectWeekdayService{
 		r: repo,
 	}
 }
 
-func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {
-	areaCollectWeekdays := s.r.FindByAreaId(area.ID)
+// error handleing
+func (s *areaCollectWeekdayService) ConvertByAreaWithAroundMonths(areaID int, year int, month time.Month) []*entity.AreaCollectDate {
+	areaCollectWeekdays := s.r.FindByAreaId(areaID)
 
 	prevYear, prevMonth := date.PrevMonth(year, month)
 	nextYear, nextMonth := date.NextMonth(year, month)
 
-	previousMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, prevYear, prevMonth)
-	currentMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, year, month)
-	nextMonthAreaCollectDates, err := s.getByAreaCollectWeekdays(areaCollectWeekdays, nextYear, nextMonth)
+	previousMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, prevYear, prevMonth)
+	currentMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, year, month)
+	nextMonthAreaCollectDates, err := s.convertFromAreaCollectWeekdays(areaCollectWeekdays, nextYear, nextMonth)
 	if err != nil {
 		return nil
 	}
@@ -43,7 +44,7 @@ func (s *areaCollectDateService) GetByAreaWithAroundMonths(area *entity.Area, ye
 	return areaCollectDates
 }
 
-func (s *areaCollectDateService) getByAreaCollectWeekdays(areaCollectWeekdays []*entity.AreaCollectWeekday, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
+func (s *areaCollectWeekdayService) convertFromAreaCollectWeekdays(areaCollectWeekdays []*entity.AreaCollectWeekday, year int, month time.Month) ([]*entity.AreaCollectDate, error) {
 	var areaCollectDates []*entity.AreaCollectDate
 
 	for _, areaCollectWeekday := range areaCollectWeekdays {

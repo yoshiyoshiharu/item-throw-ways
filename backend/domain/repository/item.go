@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 	"gorm.io/gorm"
 )
 
 type ItemRepository interface {
-	FindAll(int) []*entity.Item
+	FindAll() []*entity.Item
+  DeleteAndInsertAll([]*entity.Item) error
 }
 
 type itemRepository struct{

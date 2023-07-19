@@ -6,11 +6,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	mock_repository "github.com/yoshiyoshiharu/item-throw-ways/mock/model/repository"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
+	mock_repository "github.com/yoshiyoshiharu/item-throw-ways/mock/domain/repository"
 )
 
-func TestAreaCollectDateService_GetByAreaWithAroundMonths(t *testing.T) {
+func TestAreaCollectWeekdayService_GetByAreaWithAroundMonths(t *testing.T) {
   mockCtrl := gomock.NewController(t)
   defer mockCtrl.Finish()
 
@@ -84,8 +84,8 @@ func TestAreaCollectDateService_GetByAreaWithAroundMonths(t *testing.T) {
 
   mockAreaCollectWeekdayRepository.EXPECT().FindByAreaId(area.ID).Return(mockAreaCollectWeekdays)
 
-  s := NewAreaCollectDateService(mockAreaCollectWeekdayRepository)
-  result := s.GetByAreaWithAroundMonths(area, year, month)
+  s := NewAreaCollectWeekdayService(mockAreaCollectWeekdayRepository)
+  result := s.ConvertByAreaWithAroundMonths(area.ID, year, month)
 
   t.Run("[正常系] 指定した年月の前月と来月を含めた日付の配列を返す", func(t *testing.T) {
     assert.ElementsMatch(t, expected, result)
