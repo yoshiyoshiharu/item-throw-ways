@@ -6,7 +6,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 )
 
 func TestAreaCollectWeekdayRepository_FindByAreaId(t *testing.T) {

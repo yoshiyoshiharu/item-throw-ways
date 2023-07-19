@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"

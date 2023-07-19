@@ -3,8 +3,8 @@ package service
 import (
 	"time"
 
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 	date "github.com/yoshiyoshiharu/item-throw-ways/pkg"
 )
 

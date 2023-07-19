@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	entity "github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+  entity "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 )
 
 // MockAreaCollectWeekdayRepository is a mock of AreaCollectWeekdayRepository interface.

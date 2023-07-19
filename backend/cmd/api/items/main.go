@@ -5,8 +5,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/database"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

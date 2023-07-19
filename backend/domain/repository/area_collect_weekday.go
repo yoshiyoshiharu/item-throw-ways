@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 	"gorm.io/gorm"
 )
 

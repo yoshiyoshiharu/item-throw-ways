@@ -5,8 +5,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	mock_repository "github.com/yoshiyoshiharu/item-throw-ways/mock/model/repository"
-	"github.com/yoshiyoshiharu/item-throw-ways/model/entity"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
+	mock_repository "github.com/yoshiyoshiharu/item-throw-ways/mock/domain/repository"
 )
 
 func TestKindService_FindAll(t *testing.T) {
