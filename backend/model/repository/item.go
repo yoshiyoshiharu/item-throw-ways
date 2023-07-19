@@ -6,7 +6,8 @@ import (
 )
 
 type ItemRepository interface {
-	FindAll(int) []*entity.Item
+	FindAll() []*entity.Item
+  DeleteAndInsertAll([]*entity.Item) error
 }
 
 type itemRepository struct{
