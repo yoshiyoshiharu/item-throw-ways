@@ -7,6 +7,7 @@ import (
 
 type AreaCollectWeekdayRepository interface {
 	FindByAreaId(int) []*entity.AreaCollectWeekday
+  DeleteAndInsertAll([]*entity.AreaCollectWeekday) error
 }
 
 type areaCollectWeekdayRepository struct{
