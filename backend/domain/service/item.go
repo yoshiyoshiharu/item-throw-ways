@@ -24,7 +24,6 @@ func (s *itemService) FindAll() []*entity.Item {
   return s.r.FindAll()
 }
 
-
 func (s *itemService) DeleteAndInsertAll(items []*entity.Item) error {
   return s.r.DeleteAndInsertAll(items)
 }
