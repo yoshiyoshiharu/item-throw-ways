@@ -85,7 +85,7 @@ func TestAreaCollectWeekdayService_GetByAreaWithAroundMonths(t *testing.T) {
   mockAreaCollectWeekdayRepository.EXPECT().FindByAreaId(area.ID).Return(mockAreaCollectWeekdays)
 
   s := NewAreaCollectWeekdayService(mockAreaCollectWeekdayRepository)
-  result := s.ConvertByAreaWithAroundMonths(area, year, month)
+  result := s.ConvertByAreaWithAroundMonths(area.ID, year, month)
 
   t.Run("[正常系] 指定した年月の前月と来月を含めた日付の配列を返す", func(t *testing.T) {
     assert.ElementsMatch(t, expected, result)

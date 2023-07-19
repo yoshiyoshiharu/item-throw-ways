@@ -22,8 +22,9 @@ func NewAreaCollectWeekdayService(repo repository.AreaCollectWeekdayRepository) 
 	}
 }
 
-func (s *areaCollectWeekdayService) ConvertByAreaWithAroundMonths(area *entity.Area, year int, month time.Month) []*entity.AreaCollectDate {
-	areaCollectWeekdays := s.r.FindByAreaId(area.ID)
+// error handleing
+func (s *areaCollectWeekdayService) ConvertByAreaWithAroundMonths(areaID int, year int, month time.Month) []*entity.AreaCollectDate {
+	areaCollectWeekdays := s.r.FindByAreaId(areaID)
 
 	prevYear, prevMonth := date.PrevMonth(year, month)
 	nextYear, nextMonth := date.NextMonth(year, month)
