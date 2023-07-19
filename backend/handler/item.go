@@ -8,7 +8,7 @@ import (
 )
 
 type ItemHandler interface {
-  FindAll() (events.APIGatewayProxyResponse, error)
+  FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type itemHandler struct {

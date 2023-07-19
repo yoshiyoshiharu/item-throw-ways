@@ -25,15 +25,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
 	}
 
-	areaRepository := repository.NewAreaRepository(db)
-	area, err := areaRepository.FindById(area_id)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
-
   areaCollectWeekdayRepository := repository.NewAreaCollectWeekdayRepository(db)
   s := service.NewAreaCollectWeekdayService(areaCollectWeekdayRepository)
-  areaCollectDates := s.ConvertByAreaWithAroundMonths(area.ID, year, month)
+  areaCollectDates := s.ConvertByAreaWithAroundMonths(area_id, year, month)
 
 	jsonBody, err := json.Marshal(areaCollectDates)
 
