@@ -85,11 +85,11 @@ func (s *itemBatchService) UpdateAll() error {
 		go func(insertId int, row []string) {
 			itemId := insertId
 			itemName := row[1]
-			kindNames := GetKindsFromCell(row[2])
+			kindNames := getKindsFromCell(row[2])
 			price, _ := strconv.Atoi(row[3])
 			remarks := row[4]
 
-			itemNameKana, err := TranslateToHiragana(itemName)
+			itemNameKana, err := translateToHiragana(itemName)
 			if err != nil {
         panic(err)
 			}
@@ -134,11 +134,11 @@ func (s *itemBatchService) UpdateAll() error {
   return nil
 }
 
-func GetKindsFromCell(str string) []string {
+func getKindsFromCell(str string) []string {
 	return strings.Split(str, "、")
 }
 
-func TranslateToHiragana(name string) (string, error) {
+func translateToHiragana(name string) (string, error) {
 	requestBody := &RequestBody{
 		AppId:      os.Getenv("HIRAGANA_TRANSLATE_APP_ID"),
 		OutputType: "hiragana",
