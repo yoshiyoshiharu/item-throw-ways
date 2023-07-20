@@ -5,7 +5,7 @@ import (
 )
 
 type ItemBatchHandler interface {
-  FindAll()
+  UpdateAll()
 }
 
 type itemBatchHandler struct {
@@ -18,6 +18,8 @@ func NewItemBatchHandler(service service.ItemBatchService) *itemBatchHandler {
   }
 }
 
+const  API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
+
 func (h *itemBatchHandler) UpdateAll () {
-  h.s.UpdateAll()
+  h.s.UpdateAll(API_URL)
 }

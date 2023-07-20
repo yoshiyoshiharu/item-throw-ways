@@ -17,7 +17,7 @@ import (
 )
 
 type ItemBatchService interface {
-  UpdateAll() error
+  UpdateAll(string) error
 }
 
 type itemBatchService struct {
@@ -42,12 +42,11 @@ type ResponseBody struct {
 	Converted string `json:"converted"`
 }
 const (
-  API_URL                      = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
   HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
   CONCURRENCY                  = 10
 )
 
-func (s *itemBatchService) UpdateAll() error {
+func (s *itemBatchService) UpdateAll(apiUrl string) error {
 	var (
     wg    sync.WaitGroup
     mu    sync.Mutex
@@ -57,7 +56,7 @@ func (s *itemBatchService) UpdateAll() error {
 	allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-		API_URL,
+		apiUrl,
 	)
 	if err != nil {
 		return err
