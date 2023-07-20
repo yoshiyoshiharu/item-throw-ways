@@ -84,7 +84,7 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 		kindWeekdays := map[string][]CollectWeekday{
 			"可燃ごみ": kanenWeekdays,
 			"不燃ごみ": funenWeekdays,
-			"資源":   []CollectWeekday{{shigenWeekday, 0}},
+			"資源":   {{shigenWeekday, 0}},
 		}
 
 		for kindName, weekdays := range kindWeekdays {
