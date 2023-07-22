@@ -37,10 +37,10 @@ func TestItemRepository_DeleteAndInsertAll(t *testing.T) {
   repo := NewItemRepository(gormDB)
 
   t.Run("[正常系] itemsとitem_kindsを全消去し、itemsを挿入すること", func(t *testing.T) {
-    item1 := &entity.Item{ID: 1, Name: "Item 1"}
-    item2 := &entity.Item{ID: 2, Name: "Item 2"}
+    item1 := entity.Item{ID: 1, Name: "Item 1"}
+    item2 := entity.Item{ID: 2, Name: "Item 2"}
 
-    items := []*entity.Item{
+    items := []entity.Item{
       item1,
       item2,
     }
@@ -61,10 +61,10 @@ func TestItemRepository_DeleteAndInsertAll(t *testing.T) {
   })
 
   t.Run("[異常系] トランザクションでロールバックした場合は、エラーを返すこと", func(t *testing.T) {
-    item1 := &entity.Item{ID: 1, Name: "Item 1"}
-    invalidItem := &entity.Item{ID: 1, Name: "Item 2"}
+    item1 := entity.Item{ID: 1, Name: "Item 1"}
+    invalidItem := entity.Item{ID: 1, Name: "Item 2"}
 
-    items := []*entity.Item{
+    items := []entity.Item{
       item1,
       invalidItem,
     }

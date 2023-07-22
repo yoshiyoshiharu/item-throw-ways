@@ -15,7 +15,7 @@ func TestItemService_FindAll(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepo := mock_repository.NewMockItemRepository(ctrl)
-	itemService := NewItemService(mockRepo)
+  itemService := NewItemService(mockRepo)
 
 	t.Run("全件返す", func(t *testing.T) {
 		mockRepo.EXPECT().FindAll().Return([]*entity.Item{

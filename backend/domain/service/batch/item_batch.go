@@ -51,7 +51,7 @@ func (s *itemBatchService) UpdateAll() error {
 	var (
     wg    sync.WaitGroup
     mu    sync.Mutex
-    items []*entity.Item
+    items []entity.Item
   )
 
 	allKinds := s.kr.FindAll()
@@ -120,7 +120,7 @@ func (s *itemBatchService) UpdateAll() error {
 					continue
 				}
 				mu.Lock()
-				items = append(items, item)
+				items = append(items, *item)
 				mu.Unlock()
 			}
 			close(itemChan)

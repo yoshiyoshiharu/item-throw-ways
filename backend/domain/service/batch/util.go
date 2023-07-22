@@ -2,11 +2,8 @@ package service
 
 import "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 
-func itemExists(name string, items []*entity.Item) bool {
+func itemExists(name string, items []entity.Item) bool {
 	for _, item := range items {
-		if item == nil {
-			return false
-		}
 		if name == item.Name {
 			return true
 		}

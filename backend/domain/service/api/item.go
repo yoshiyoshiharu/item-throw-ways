@@ -7,7 +7,7 @@ import (
 
 type ItemService interface {
   FindAll() []*entity.Item
-  DeleteAndInsertAll([]*entity.Item) error
+  DeleteAndInsertAll([]entity.Item) error
 }
 
 type itemService struct {
@@ -24,6 +24,6 @@ func (s *itemService) FindAll() []*entity.Item {
   return s.r.FindAll()
 }
 
-func (s *itemService) DeleteAndInsertAll(items []*entity.Item) error {
+func (s *itemService) DeleteAndInsertAll(items []entity.Item) error {
   return s.r.DeleteAndInsertAll(items)
 }
