@@ -41,9 +41,9 @@ type RequestBody struct {
 type ResponseBody struct {
 	Converted string `json:"converted"`
 }
-const (
-  API_URL                      = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
-  HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
+var (
+  ItemsApiUrl                      = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
+  HiraganaTranslationApiUrl = "https://labs.goo.ne.jp/api/hiragana"
   CONCURRENCY                  = 10
 )
 
@@ -57,7 +57,7 @@ func (s *itemBatchService) UpdateAll() error {
 	allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-		API_URL,
+		ItemsApiUrl,
 	)
 	if err != nil {
 		return err
@@ -150,7 +150,7 @@ func TranslateToHiragana(name string) (string, error) {
 		return "", err
 	}
 
-	req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+	req, _ := http.NewRequest("POST", HiraganaTranslationApiUrl, bytes.NewBuffer(jsonString))
 	req.Header.Set("Content-Type", "application/json")
 	client := new(http.Client)
 	resp, err := client.Do(req)
