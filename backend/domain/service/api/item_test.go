@@ -38,7 +38,7 @@ func TestItemService_DeleteAndInsertAll(t *testing.T) {
 	itemService := NewItemService(mockRepo)
 
 	t.Run("成功したときエラーを返さない", func(t *testing.T) {
-		mockItems := []*entity.Item{
+		mockItems := []entity.Item{
 			{ID: 1, Name: "Item 1"},
 			{ID: 2, Name: "Item 2"},
 			{ID: 3, Name: "Item 3"},
@@ -52,7 +52,7 @@ func TestItemService_DeleteAndInsertAll(t *testing.T) {
 	})
 
 	t.Run("失敗したときエラーを返す", func(t *testing.T) {
-		mockItems := []*entity.Item{
+		mockItems := []entity.Item{
 			{ID: 1, Name: "Item 1"},
 			{ID: 2, Name: "Item 2"},
 			{ID: 3, Name: "Item 3"},
