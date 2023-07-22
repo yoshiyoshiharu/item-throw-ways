@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-  db, err := database.Connect()
-  if err != nil {
-    panic(err)
-  }
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 
-  r := repository.NewAreaRepository(db)
-  s := service.NewAreaService(r)
-  h := handler.NewAreaHandler(s)
+	r := repository.NewAreaRepository(db)
+	s := service.NewAreaService(r)
+	h := handler.NewAreaHandler(s)
 
 	lambda.Start(h.FindAll)
 }

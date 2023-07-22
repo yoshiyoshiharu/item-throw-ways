@@ -12,21 +12,21 @@ import (
 )
 
 type AreaCollectDateHandler interface {
-  FindByAreaId(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
-  FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
+	FindByAreaId(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
+	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type areaCollectDateHandler struct {
-  s service.AreaCollectWeekdayService
+	s service.AreaCollectWeekdayService
 }
 
 func NewAreaCollectDateHandler(service service.AreaCollectWeekdayService) *areaCollectDateHandler {
-  return &areaCollectDateHandler {
-    s: service,
-  }
+	return &areaCollectDateHandler{
+		s: service,
+	}
 }
 
-func (h *areaCollectDateHandler) FindAll (request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (h *areaCollectDateHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	area_id, year, month, err := parseParams(request)
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")

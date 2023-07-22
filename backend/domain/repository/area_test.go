@@ -8,9 +8,9 @@ import (
 )
 
 func TestAreaRepository_FindAll(t *testing.T) {
-  gormDB, mock := newMockDB()
+	gormDB, mock := newMockDB()
 
-  repo := NewAreaRepository(gormDB)
+	repo := NewAreaRepository(gormDB)
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(1, "Area 1").
@@ -20,20 +20,19 @@ func TestAreaRepository_FindAll(t *testing.T) {
 
 	areas := repo.FindAll()
 
-  t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
-    assert.Equal(t, 2, len(areas))
-    assert.Equal(t, "Area 1", areas[0].Name)
-    assert.Equal(t, "Area 2", areas[1].Name)
+	t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
+		assert.Equal(t, 2, len(areas))
+		assert.Equal(t, "Area 1", areas[0].Name)
+		assert.Equal(t, "Area 2", areas[1].Name)
 
-    assert.NoError(t, mock.ExpectationsWereMet())
-  })
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
 
-
 func TestAreaRepository_FindById(t *testing.T) {
-  gormDB, mock := newMockDB()
+	gormDB, mock := newMockDB()
 
-  repo := NewAreaRepository(gormDB)
+	repo := NewAreaRepository(gormDB)
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(1, "Area 1")
@@ -42,9 +41,9 @@ func TestAreaRepository_FindById(t *testing.T) {
 
 	area, _ := repo.FindById(1)
 
-  t.Run("[正常系] FindByIdは指定したIDのエリアを返すこと", func(t *testing.T) {
-    assert.Equal(t, "Area 1", area.Name)
+	t.Run("[正常系] FindByIdは指定したIDのエリアを返すこと", func(t *testing.T) {
+		assert.Equal(t, "Area 1", area.Name)
 
-    assert.NoError(t, mock.ExpectationsWereMet())
-  })
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }

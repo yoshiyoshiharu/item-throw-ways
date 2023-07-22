@@ -8,9 +8,9 @@ import (
 )
 
 func TestKindRepository_FindAll(t *testing.T) {
-  gormDB, mock := newMockDB()
+	gormDB, mock := newMockDB()
 
-  repo := NewKindRepository(gormDB)
+	repo := NewKindRepository(gormDB)
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(1, "Kind 1").
@@ -20,12 +20,11 @@ func TestKindRepository_FindAll(t *testing.T) {
 
 	kinds := repo.FindAll()
 
-  t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
-    assert.Equal(t, 2, len(kinds))
-    assert.Equal(t, "Kind 1", kinds[0].Name)
-    assert.Equal(t, "Kind 2", kinds[1].Name)
+	t.Run("[正常系] FindAllは全件返すこと", func(t *testing.T) {
+		assert.Equal(t, 2, len(kinds))
+		assert.Equal(t, "Kind 1", kinds[0].Name)
+		assert.Equal(t, "Kind 2", kinds[1].Name)
 
-    assert.NoError(t, mock.ExpectationsWereMet())
-  })
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
-

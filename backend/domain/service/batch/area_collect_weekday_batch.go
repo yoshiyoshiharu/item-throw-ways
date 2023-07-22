@@ -17,23 +17,23 @@ import (
 )
 
 type AreaCollectWeekdayBatchService interface {
-  UpdateAll() error
+	UpdateAll() error
 }
 
 type areaCollectWeekdayBatchService struct {
-  ar repository.AreaCollectWeekdayRepository
-  kr repository.KindRepository
+	ar repository.AreaCollectWeekdayRepository
+	kr repository.KindRepository
 }
 
 func NewAreaCollectWeekdayBatchService(ar repository.AreaCollectWeekdayRepository, kr repository.KindRepository) *areaCollectWeekdayBatchService {
-  return &areaCollectWeekdayBatchService{
-    ar: ar,
-    kr: kr,
-  }
+	return &areaCollectWeekdayBatchService{
+		ar: ar,
+		kr: kr,
+	}
 }
 
-const (
-	AREA_COLLECT_WEEKDAYS_API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
+var (
+	AreaCollectWeekdaysApiUrl = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
 )
 
 type CollectWeekday struct {
@@ -42,10 +42,10 @@ type CollectWeekday struct {
 }
 
 func (s *areaCollectWeekdayBatchService) UpdateAll() error {
-  allKinds := s.kr.FindAll()
+	allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-		AREA_COLLECT_WEEKDAYS_API_URL,
+		AreaCollectWeekdaysApiUrl,
 	)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 		return err
 	}
 
-	var areaCollectWeekdays []*entity.AreaCollectWeekday
+	var areaCollectWeekdays []entity.AreaCollectWeekday
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -84,29 +84,29 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 		kindWeekdays := map[string][]CollectWeekday{
 			"可燃ごみ": kanenWeekdays,
 			"不燃ごみ": funenWeekdays,
-			"資源":   []CollectWeekday{{shigenWeekday, 0}},
+			"資源":   {{shigenWeekday, 0}},
 		}
 
 		for kindName, weekdays := range kindWeekdays {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
 				newAreaCollectWeekday := entity.NewAreaCollectWeekday(area, kind, weekday.Weekday, weekday.Lap)
-				areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
+				areaCollectWeekdays = append(areaCollectWeekdays, *newAreaCollectWeekday)
 			}
 		}
 	}
 
-  err = s.ar.DeleteAndInsertAll(areaCollectWeekdays)
-  if err != nil {
-    return err
-  }
+	err = s.ar.DeleteAndInsertAll(areaCollectWeekdays)
+	if err != nil {
+		return err
+	}
 
-  return nil
+	return nil
 }
 
 func splitWeekday(str string) []CollectWeekday {
 	var collectWeekdays []CollectWeekday
-  // 月曜日・金曜日 からweekdayを抜き出す
+	// 月曜日・金曜日 からweekdayを抜き出す
 	weekdays := strings.Split(str, "・")
 
 	for _, weekday := range weekdays {
@@ -139,4 +139,3 @@ func splitNthWeekday(str string) []CollectWeekday {
 
 	return collectWeekdays
 }
-

@@ -8,20 +8,20 @@ import (
 )
 
 type AreaHandler interface {
-  FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
+	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type areaHandler struct {
-  s service.AreaService
+	s service.AreaService
 }
 
 func NewAreaHandler(service service.AreaService) *areaHandler {
-  return &areaHandler{
-    s: service,
-  }
+	return &areaHandler{
+		s: service,
+	}
 }
 
-func (h *areaHandler) FindAll (request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (h *areaHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	areas := h.s.FindAll()
 
 	jsonBody, err := json.Marshal(areas)
@@ -37,4 +37,3 @@ func (h *areaHandler) FindAll (request events.APIGatewayProxyRequest) (events.AP
 		StatusCode: 200,
 	}, nil
 }
-

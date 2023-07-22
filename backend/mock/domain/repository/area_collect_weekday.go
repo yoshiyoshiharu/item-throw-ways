@@ -35,7 +35,7 @@ func (m *MockAreaCollectWeekdayRepository) EXPECT() *MockAreaCollectWeekdayRepos
 }
 
 // DeleteAndInsertAll mocks base method.
-func (m *MockAreaCollectWeekdayRepository) DeleteAndInsertAll(arg0 []*entity.AreaCollectWeekday) error {
+func (m *MockAreaCollectWeekdayRepository) DeleteAndInsertAll(arg0 []entity.AreaCollectWeekday) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAndInsertAll", arg0)
 	ret0, _ := ret[0].(error)

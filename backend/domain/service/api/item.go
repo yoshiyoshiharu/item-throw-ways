@@ -6,24 +6,24 @@ import (
 )
 
 type ItemService interface {
-  FindAll() []*entity.Item
-  DeleteAndInsertAll([]*entity.Item) error
+	FindAll() []*entity.Item
+	DeleteAndInsertAll([]entity.Item) error
 }
 
 type itemService struct {
-  r repository.ItemRepository
+	r repository.ItemRepository
 }
 
 func NewItemService(repo repository.ItemRepository) *itemService {
-  return &itemService{
-    r: repo,
-  }
+	return &itemService{
+		r: repo,
+	}
 }
 
 func (s *itemService) FindAll() []*entity.Item {
-  return s.r.FindAll()
+	return s.r.FindAll()
 }
 
-func (s *itemService) DeleteAndInsertAll(items []*entity.Item) error {
-  return s.r.DeleteAndInsertAll(items)
+func (s *itemService) DeleteAndInsertAll(items []entity.Item) error {
+	return s.r.DeleteAndInsertAll(items)
 }

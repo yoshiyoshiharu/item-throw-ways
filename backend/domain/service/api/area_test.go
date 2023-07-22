@@ -23,11 +23,11 @@ func TestAreaService_FindAll(t *testing.T) {
 
 	areaService := NewAreaService(mockRepo)
 
-  t.Run("FindAllは全てのAreaを返す", func(t *testing.T) {
-    areas := areaService.FindAll()
+	t.Run("FindAllは全てのAreaを返す", func(t *testing.T) {
+		areas := areaService.FindAll()
 
-    assert.Equal(t, 3, len(areas))
-  })
+		assert.Equal(t, 3, len(areas))
+	})
 }
 
 func TestAreaService_FindById(t *testing.T) {
@@ -40,17 +40,17 @@ func TestAreaService_FindById(t *testing.T) {
 
 	areaService := NewAreaService(mockRepo)
 
-  t.Run("FindByIdは指定したIDのAreaを返す", func(t *testing.T) {
-    area, err := areaService.FindById(1)
-    assert.NoError(t, err)
-    assert.NotNil(t, area)
-    assert.Equal(t, 1, area.ID)
-  })
+	t.Run("FindByIdは指定したIDのAreaを返す", func(t *testing.T) {
+		area, err := areaService.FindById(1)
+		assert.NoError(t, err)
+		assert.NotNil(t, area)
+		assert.Equal(t, 1, area.ID)
+	})
 
-  t.Run("FindByIdは指定したIDのAreaが存在しない場合はエラーを返す", func(t *testing.T) {
-    nonExistingID := 999
-    area, err := areaService.FindById(nonExistingID)
-    assert.Error(t, err)
-    assert.Nil(t, area)
-  })
+	t.Run("FindByIdは指定したIDのAreaが存在しない場合はエラーを返す", func(t *testing.T) {
+		nonExistingID := 999
+		area, err := areaService.FindById(nonExistingID)
+		assert.Error(t, err)
+		assert.Nil(t, area)
+	})
 }

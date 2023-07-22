@@ -17,7 +17,7 @@ var (
 )
 
 func Connect() (*gorm.DB, error) {
-  var db *gorm.DB
+	var db *gorm.DB
 	var err error
 
 	dsn := DB_USER + ":" + DB_PASSWORD + "@tcp(" + DB_HOST + ")/" + DB_NAME + "?charset=utf8mb4&parseTime=True&loc=Local"
@@ -25,10 +25,10 @@ func Connect() (*gorm.DB, error) {
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println("DB接続失敗")
-    return nil, err
+		return nil, err
 	}
 
 	log.Println("DB接続成功")
 
-  return db, nil
+	return db, nil
 }

@@ -8,20 +8,20 @@ import (
 )
 
 type ItemHandler interface {
-  FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
+	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type itemHandler struct {
-  s service.ItemService
+	s service.ItemService
 }
 
 func NewItemHandler(service service.ItemService) *itemHandler {
-  return &itemHandler{
-    s: service,
-  }
+	return &itemHandler{
+		s: service,
+	}
 }
 
-func (h *itemHandler) FindAll (request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (h *itemHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	items := h.s.FindAll()
 
 	jsonBody, err := json.Marshal(items)
@@ -37,4 +37,3 @@ func (h *itemHandler) FindAll (request events.APIGatewayProxyRequest) (events.AP
 		StatusCode: 200,
 	}, nil
 }
-

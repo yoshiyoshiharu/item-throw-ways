@@ -1,23 +1,23 @@
 package handler
 
 import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
+
 type AreaCollectWeekdayBatchHandler interface {
-  UpdateAll()
+	UpdateAll()
 }
 
 type areaCollectWeekdayBatchHandler struct {
-  s service.AreaCollectWeekdayBatchService
+	s service.AreaCollectWeekdayBatchService
 }
 
 func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchService) *areaCollectWeekdayBatchHandler {
-  return &areaCollectWeekdayBatchHandler{
-    s: service,
-  }
+	return &areaCollectWeekdayBatchHandler{
+		s: service,
+	}
 }
 
-func (h *areaCollectWeekdayBatchHandler) UpdateAll () {
-  err := h.s.UpdateAll()
+func (h *areaCollectWeekdayBatchHandler) UpdateAll() {
+	err := h.s.UpdateAll()
 
-  notifySlack(err)
+	notifySlack(err)
 }
-

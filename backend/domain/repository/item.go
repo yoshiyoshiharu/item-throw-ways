@@ -7,15 +7,15 @@ import (
 
 type ItemRepository interface {
 	FindAll() []*entity.Item
-  DeleteAndInsertAll([]*entity.Item) error
+	DeleteAndInsertAll([]entity.Item) error
 }
 
-type itemRepository struct{
-  db *gorm.DB
+type itemRepository struct {
+	db *gorm.DB
 }
 
 func NewItemRepository(db *gorm.DB) *itemRepository {
-  return &itemRepository{db: db}
+	return &itemRepository{db: db}
 }
 
 func (r *itemRepository) FindAll() []*entity.Item {
@@ -25,8 +25,7 @@ func (r *itemRepository) FindAll() []*entity.Item {
 	return items
 }
 
-// Rollbackできていないかもしれないので修正する
-func (r *itemRepository) DeleteAndInsertAll(items []*entity.Item) error {
+func (r *itemRepository) DeleteAndInsertAll(items []entity.Item) error {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Exec("DELETE FROM items").Error; err != nil {
 			return err

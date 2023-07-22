@@ -17,19 +17,19 @@ import (
 )
 
 type ItemBatchService interface {
-  UpdateAll() error
+	UpdateAll() error
 }
 
 type itemBatchService struct {
-  ir repository.ItemRepository
-  kr repository.KindRepository
+	ir repository.ItemRepository
+	kr repository.KindRepository
 }
 
 func NewItemBatchService(ir repository.ItemRepository, kr repository.KindRepository) *itemBatchService {
-  return &itemBatchService{
-    ir: ir,
-    kr: kr,
-  }
+	return &itemBatchService{
+		ir: ir,
+		kr: kr,
+	}
 }
 
 type RequestBody struct {
@@ -41,23 +41,24 @@ type RequestBody struct {
 type ResponseBody struct {
 	Converted string `json:"converted"`
 }
-const (
-  API_URL                      = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
-  HIRAGANA_TRANSLATION_API_URL = "https://labs.goo.ne.jp/api/hiragana"
-  CONCURRENCY                  = 10
+
+var (
+	ItemsApiUrl               = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/06bunbetuhinmoku/bunbetuhinmoku.csv"
+	HiraganaTranslationApiUrl = "https://labs.goo.ne.jp/api/hiragana"
+	CONCURRENCY               = 10
 )
 
 func (s *itemBatchService) UpdateAll() error {
 	var (
-    wg    sync.WaitGroup
-    mu    sync.Mutex
-    items []*entity.Item
-  )
+		wg    sync.WaitGroup
+		mu    sync.Mutex
+		items []entity.Item
+	)
 
 	allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-		API_URL,
+		ItemsApiUrl,
 	)
 	if err != nil {
 		return err
@@ -91,7 +92,7 @@ func (s *itemBatchService) UpdateAll() error {
 
 			itemNameKana, err := TranslateToHiragana(itemName)
 			if err != nil {
-        panic(err)
+				panic(err)
 			}
 
 			var kinds []entity.Kind
@@ -120,18 +121,19 @@ func (s *itemBatchService) UpdateAll() error {
 					continue
 				}
 				mu.Lock()
-				items = append(items, item)
+				items = append(items, *item)
 				mu.Unlock()
 			}
-			close(itemChan)
 		}()
 	}
 
 	wg.Wait()
 
+	close(itemChan)
+
 	s.ir.DeleteAndInsertAll(items)
 
-  return nil
+	return nil
 }
 
 func GetKindsFromCell(str string) []string {
@@ -150,7 +152,7 @@ func TranslateToHiragana(name string) (string, error) {
 		return "", err
 	}
 
-	req, _ := http.NewRequest("POST", HIRAGANA_TRANSLATION_API_URL, bytes.NewBuffer(jsonString))
+	req, _ := http.NewRequest("POST", HiraganaTranslationApiUrl, bytes.NewBuffer(jsonString))
 	req.Header.Set("Content-Type", "application/json")
 	client := new(http.Client)
 	resp, err := client.Do(req)

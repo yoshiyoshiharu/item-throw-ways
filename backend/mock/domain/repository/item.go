@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-  entity "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
+	entity "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 )
 
 // MockItemRepository is a mock of ItemRepository interface.
@@ -35,7 +35,7 @@ func (m *MockItemRepository) EXPECT() *MockItemRepositoryMockRecorder {
 }
 
 // DeleteAndInsertAll mocks base method.
-func (m *MockItemRepository) DeleteAndInsertAll(arg0 []*entity.Item) error {
+func (m *MockItemRepository) DeleteAndInsertAll(arg0 []entity.Item) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAndInsertAll", arg0)
 	ret0, _ := ret[0].(error)
