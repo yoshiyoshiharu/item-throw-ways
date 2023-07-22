@@ -66,7 +66,7 @@ Resources:
   UpdateItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: cmd/batches/update_items
+      CodeUri: cmd/batch/update_items
       Handler: update_items
       Runtime: go1.x
       Events:
@@ -82,7 +82,7 @@ Resources:
   UpdateAreaCollectWeekdaysFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: cmd/batches/update_area_collect_weekdays
+      CodeUri: cmd/batch/update_area_collect_weekdays
       Handler: update_area_collect_weekdays
       Runtime: go1.x
       Events:

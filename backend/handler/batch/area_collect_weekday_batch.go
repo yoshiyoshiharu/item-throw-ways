@@ -1,6 +1,8 @@
 package handler
 
-import "github.com/yoshiyoshiharu/item-throw-ways/domain/service"
+import (
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/service"
+)
 type AreaCollectWeekdayBatchHandler interface {
   UpdateAll()
 }
@@ -16,5 +18,8 @@ func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchSe
 }
 
 func (h *areaCollectWeekdayBatchHandler) UpdateAll () {
-  h.s.UpdateAll()
+  err := h.s.UpdateAll()
+
+  notifySlack(err)
 }
+
