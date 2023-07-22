@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/csv"
-	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -96,10 +95,6 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 			}
 		}
 	}
-
-  for _, areaCollectWeekday := range areaCollectWeekdays {
-    fmt.Println(areaCollectWeekday.AreaId, areaCollectWeekday.KindId, areaCollectWeekday.Weekday, areaCollectWeekday.Lap)
-  }
 
   err = s.ar.DeleteAndInsertAll(areaCollectWeekdays)
   if err != nil {
