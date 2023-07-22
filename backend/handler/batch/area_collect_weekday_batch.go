@@ -16,8 +16,8 @@ func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchSe
 }
 
 func (h *areaCollectWeekdayBatchHandler) UpdateAll () {
-  err := h.s.UpdateAll()
+  h.s.UpdateAll()
 
-  notifySlack(err)
+  // notifySlack(err)
 }
 

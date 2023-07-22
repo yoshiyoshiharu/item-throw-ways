@@ -17,8 +17,8 @@ func NewItemBatchHandler(service service.ItemBatchService) *itemBatchHandler {
 }
 
 func (h *itemBatchHandler) UpdateAll () {
-  err := h.s.UpdateAll()
+  h.s.UpdateAll()
   
-  notifySlack(err)
+  // notifySlack(err)
 }
 
