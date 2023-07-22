@@ -32,8 +32,8 @@ func NewAreaCollectWeekdayBatchService(ar repository.AreaCollectWeekdayRepositor
   }
 }
 
-const (
-	AREA_COLLECT_WEEKDAYS_API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
+var (
+	AreaCollectWeekdaysApiUrl = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
 )
 
 type CollectWeekday struct {
@@ -45,7 +45,7 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
   allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-		AREA_COLLECT_WEEKDAYS_API_URL,
+    AreaCollectWeekdaysApiUrl,
 	)
 	if err != nil {
 		return err
