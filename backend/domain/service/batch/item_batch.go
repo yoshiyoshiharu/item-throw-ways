@@ -123,11 +123,12 @@ func (s *itemBatchService) UpdateAll() error {
 				items = append(items, *item)
 				mu.Unlock()
 			}
-			close(itemChan)
 		}()
 	}
 
 	wg.Wait()
+
+  close(itemChan)
 
 	s.ir.DeleteAndInsertAll(items)
 
