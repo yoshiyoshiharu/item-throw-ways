@@ -43,9 +43,9 @@ func TestAreaCollectWeekdayRepository_DeleteAndInsertAll(t *testing.T) {
 	areaCollectWeekday1 := entity.NewAreaCollectWeekday(area, kind, 3, 0)
 	areaCollectWeekday2 := entity.NewAreaCollectWeekday(area, kind, 5, 0)
 
-	areaCollectWeekdays := []*entity.AreaCollectWeekday{
-		areaCollectWeekday1,
-		areaCollectWeekday2,
+	areaCollectWeekdays := []entity.AreaCollectWeekday{
+		*areaCollectWeekday1,
+		*areaCollectWeekday2,
 	}
 
 	t.Run("[正常系] areasとarea_collect_weekdaysを全消去し、areasとarea_collect_weekdaysを挿入すること", func(t *testing.T) {
