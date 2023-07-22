@@ -49,13 +49,13 @@ func TestAreaCollectWeekdayBatch_UpdateAll(t *testing.T) {
     entity.NewKind(2, "不燃ごみ"),
     entity.NewKind(3, "資源"),
   }
-  area := entity.NewArea(1, "後楽一丁目")
-  areaCollectWeekdays := []*entity.AreaCollectWeekday{
-    entity.NewAreaCollectWeekday(area, allKinds[0], 1, 0),
-    entity.NewAreaCollectWeekday(area, allKinds[0], 1, 5),
-    entity.NewAreaCollectWeekday(area, allKinds[1], 2, 2),
-    entity.NewAreaCollectWeekday(area, allKinds[1], 2, 4),
-    entity.NewAreaCollectWeekday(area, allKinds[2], 3, 0) ,
+  area := entity.NewArea(1, "後楽1丁目")
+  areaCollectWeekdays := []entity.AreaCollectWeekday{
+    *entity.NewAreaCollectWeekday(area, allKinds[0], 2, 0),
+    *entity.NewAreaCollectWeekday(area, allKinds[0], 5, 0),
+    *entity.NewAreaCollectWeekday(area, allKinds[1], 4, 1),
+    *entity.NewAreaCollectWeekday(area, allKinds[1], 4, 3),
+    *entity.NewAreaCollectWeekday(area, allKinds[2], 3, 0),
   }
 
   kr.EXPECT().FindAll().Return(allKinds).Times(1)

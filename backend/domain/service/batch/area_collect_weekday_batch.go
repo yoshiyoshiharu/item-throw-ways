@@ -59,7 +59,7 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 		return err
 	}
 
-	var areaCollectWeekdays []*entity.AreaCollectWeekday
+	var areaCollectWeekdays []entity.AreaCollectWeekday
 	for i, row := range rows {
 		// ヘッダー行はスキップ
 		if i == 0 {
@@ -92,7 +92,7 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 			kind := findKind(kindName, allKinds)
 			for _, weekday := range weekdays {
 				newAreaCollectWeekday := entity.NewAreaCollectWeekday(area, kind, weekday.Weekday, weekday.Lap)
-				areaCollectWeekdays = append(areaCollectWeekdays, newAreaCollectWeekday)
+				areaCollectWeekdays = append(areaCollectWeekdays, *newAreaCollectWeekday)
 			}
 		}
 	}
