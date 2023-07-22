@@ -1,8 +1,6 @@
 package handler
 
-import (
-	"github.com/yoshiyoshiharu/item-throw-ways/domain/service"
-)
+import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 
 type ItemBatchHandler interface {
   FindAll()
