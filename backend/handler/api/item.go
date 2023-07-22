@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/yoshiyoshiharu/item-throw-ways/domain/service"
+	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/api"
 )
 
 type ItemHandler interface {

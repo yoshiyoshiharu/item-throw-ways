@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
-	"github.com/yoshiyoshiharu/item-throw-ways/domain/service"
+	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/batch"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
