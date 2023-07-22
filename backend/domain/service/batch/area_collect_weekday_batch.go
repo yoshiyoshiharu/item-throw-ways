@@ -17,19 +17,19 @@ import (
 )
 
 type AreaCollectWeekdayBatchService interface {
-  UpdateAll() error
+	UpdateAll() error
 }
 
 type areaCollectWeekdayBatchService struct {
-  ar repository.AreaCollectWeekdayRepository
-  kr repository.KindRepository
+	ar repository.AreaCollectWeekdayRepository
+	kr repository.KindRepository
 }
 
 func NewAreaCollectWeekdayBatchService(ar repository.AreaCollectWeekdayRepository, kr repository.KindRepository) *areaCollectWeekdayBatchService {
-  return &areaCollectWeekdayBatchService{
-    ar: ar,
-    kr: kr,
-  }
+	return &areaCollectWeekdayBatchService{
+		ar: ar,
+		kr: kr,
+	}
 }
 
 var (
@@ -42,10 +42,10 @@ type CollectWeekday struct {
 }
 
 func (s *areaCollectWeekdayBatchService) UpdateAll() error {
-  allKinds := s.kr.FindAll()
+	allKinds := s.kr.FindAll()
 
 	resp, err := http.Get(
-    AreaCollectWeekdaysApiUrl,
+		AreaCollectWeekdaysApiUrl,
 	)
 	if err != nil {
 		return err
@@ -96,17 +96,17 @@ func (s *areaCollectWeekdayBatchService) UpdateAll() error {
 		}
 	}
 
-  err = s.ar.DeleteAndInsertAll(areaCollectWeekdays)
-  if err != nil {
-    return err
-  }
+	err = s.ar.DeleteAndInsertAll(areaCollectWeekdays)
+	if err != nil {
+		return err
+	}
 
-  return nil
+	return nil
 }
 
 func splitWeekday(str string) []CollectWeekday {
 	var collectWeekdays []CollectWeekday
-  // 月曜日・金曜日 からweekdayを抜き出す
+	// 月曜日・金曜日 からweekdayを抜き出す
 	weekdays := strings.Split(str, "・")
 
 	for _, weekday := range weekdays {
@@ -139,4 +139,3 @@ func splitNthWeekday(str string) []CollectWeekday {
 
 	return collectWeekdays
 }
-

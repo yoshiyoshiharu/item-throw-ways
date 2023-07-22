@@ -7,14 +7,12 @@ import (
 )
 
 func newMockDB() (*gorm.DB, sqlmock.Sqlmock) {
-  db, mock, _ := sqlmock.New()
+	db, mock, _ := sqlmock.New()
 
-  gormDB, _ := gorm.Open(mysql.New(mysql.Config{
-		Conn: db,
-    SkipInitializeWithVersion: true,
+	gormDB, _ := gorm.Open(mysql.New(mysql.Config{
+		Conn:                      db,
+		SkipInitializeWithVersion: true,
 	}), &gorm.Config{})
 
-  return gormDB, mock
+	return gormDB, mock
 }
-
-

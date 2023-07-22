@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-  db, err := database.Connect()
-  if err != nil {
-    panic(err)
-  }
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 
-  r := repository.NewItemRepository(db)
-  s := service.NewItemService(r)
-  h := handler.NewItemHandler(s)
+	r := repository.NewItemRepository(db)
+	s := service.NewItemService(r)
+	h := handler.NewItemHandler(s)
 
 	lambda.Start(h.FindAll)
 }

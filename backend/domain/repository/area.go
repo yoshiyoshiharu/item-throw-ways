@@ -10,8 +10,8 @@ type AreaRepository interface {
 	FindById(int) (*entity.Area, error)
 }
 
-type areaRepository struct{
-  db *gorm.DB
+type areaRepository struct {
+	db *gorm.DB
 }
 
 func NewAreaRepository(db *gorm.DB) *areaRepository {

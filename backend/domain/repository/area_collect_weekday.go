@@ -7,15 +7,15 @@ import (
 
 type AreaCollectWeekdayRepository interface {
 	FindByAreaId(int) []*entity.AreaCollectWeekday
-  DeleteAndInsertAll([]entity.AreaCollectWeekday) error
+	DeleteAndInsertAll([]entity.AreaCollectWeekday) error
 }
 
-type areaCollectWeekdayRepository struct{
-  db *gorm.DB
+type areaCollectWeekdayRepository struct {
+	db *gorm.DB
 }
 
 func NewAreaCollectWeekdayRepository(db *gorm.DB) *areaCollectWeekdayRepository {
-  return &areaCollectWeekdayRepository{db: db}
+	return &areaCollectWeekdayRepository{db: db}
 }
 
 func (r *areaCollectWeekdayRepository) FindByAreaId(areaId int) []*entity.AreaCollectWeekday {

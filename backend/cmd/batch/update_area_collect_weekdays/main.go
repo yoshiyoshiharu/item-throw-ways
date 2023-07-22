@@ -19,15 +19,15 @@ var (
 )
 
 func main() {
-  db, err := database.Connect()
-  if err != nil {
-    panic(err)
-  }
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 
-  ar := repository.NewAreaCollectWeekdayRepository(db)
-  kr := repository.NewKindRepository(db)
-  s := service.NewAreaCollectWeekdayBatchService(ar, kr)
-  h := handler.NewAreaCollectWeekdayBatchHandler(s)
+	ar := repository.NewAreaCollectWeekdayRepository(db)
+	kr := repository.NewKindRepository(db)
+	s := service.NewAreaCollectWeekdayBatchService(ar, kr)
+	h := handler.NewAreaCollectWeekdayBatchHandler(s)
 
 	lambda.Start(h.UpdateAll)
 }

@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-  entity "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
+	entity "github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 )
 
 // MockKindRepository is a mock of KindRepository interface.

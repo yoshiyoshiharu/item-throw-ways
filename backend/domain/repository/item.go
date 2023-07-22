@@ -7,15 +7,15 @@ import (
 
 type ItemRepository interface {
 	FindAll() []*entity.Item
-  DeleteAndInsertAll([]entity.Item) error
+	DeleteAndInsertAll([]entity.Item) error
 }
 
-type itemRepository struct{
-  db *gorm.DB
+type itemRepository struct {
+	db *gorm.DB
 }
 
 func NewItemRepository(db *gorm.DB) *itemRepository {
-  return &itemRepository{db: db}
+	return &itemRepository{db: db}
 }
 
 func (r *itemRepository) FindAll() []*entity.Item {

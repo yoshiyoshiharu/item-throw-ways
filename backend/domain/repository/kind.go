@@ -9,12 +9,12 @@ type KindRepository interface {
 	FindAll() []*entity.Kind
 }
 
-type kindRepository struct{
-  db *gorm.DB
+type kindRepository struct {
+	db *gorm.DB
 }
 
 func NewKindRepository(db *gorm.DB) *kindRepository {
-  return &kindRepository{db: db}
+	return &kindRepository{db: db}
 }
 
 func (r *kindRepository) FindAll() []*entity.Kind {

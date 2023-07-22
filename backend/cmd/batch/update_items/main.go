@@ -10,15 +10,15 @@ import (
 )
 
 func main() {
- db, err := database.Connect()
-  if err != nil {
-    panic(err)
-  }
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 
-  ir := repository.NewItemRepository(db)
-  kr := repository.NewKindRepository(db)
-  s := service.NewItemBatchService(ir, kr)
-  h := handler.NewItemBatchHandler(s)
+	ir := repository.NewItemRepository(db)
+	kr := repository.NewKindRepository(db)
+	s := service.NewItemBatchService(ir, kr)
+	h := handler.NewItemBatchHandler(s)
 
 	lambda.Start(h.UpdateAll)
 }

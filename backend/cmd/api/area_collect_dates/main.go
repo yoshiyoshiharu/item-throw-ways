@@ -9,15 +9,14 @@ import (
 )
 
 func main() {
-  db, err := database.Connect()
-  if err != nil {
-    panic(err)
-  }
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
 
-  r := repository.NewAreaCollectWeekdayRepository(db)
-  s := service.NewAreaCollectWeekdayService(r)
-  h := handler.NewAreaCollectDateHandler(s)
+	r := repository.NewAreaCollectWeekdayRepository(db)
+	s := service.NewAreaCollectWeekdayService(r)
+	h := handler.NewAreaCollectDateHandler(s)
 
 	lambda.Start(h.FindAll)
 }
-
