@@ -14,7 +14,7 @@ import (
 	"golang.org/x/text/transform"
 )
 
-func mockCsvServer() *httptest.Server {
+func mockAreaCollectWeekdayCsvServer() *httptest.Server {
   csvData := [][]string{
 		{"町名", "丁目", "可燃ごみ", "不燃ごみ", "資源ごみ"},
     {"後楽", "1丁目", "火曜日・金曜日", "第1・第3木曜日", "水曜日"},
@@ -35,7 +35,7 @@ func TestAreaCollectWeekdayBatch_UpdateAll(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-  mockServer := mockCsvServer()
+  mockServer := mockAreaCollectWeekdayCsvServer()
   defer mockServer.Close()
 
   AreaCollectWeekdaysApiUrl = mockServer.URL
