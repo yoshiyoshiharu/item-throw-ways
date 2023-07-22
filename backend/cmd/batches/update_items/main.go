@@ -5,7 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/service"
-	"github.com/yoshiyoshiharu/item-throw-ways/handler"
+	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/batch"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
 
