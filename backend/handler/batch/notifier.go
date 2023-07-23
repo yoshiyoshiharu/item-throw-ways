@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+var (
+	slackWebhookUrl = "https://hooks.slack.com/services/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"
+)
+
 func notifySlack(err error) {
 	var jsonStr string
 
@@ -16,7 +20,7 @@ func notifySlack(err error) {
 
 	req, err := http.NewRequest(
 		"POST",
-		"https://hooks.slack.com/services/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",
+		slackWebhookUrl,
 		bytes.NewBuffer([]byte(jsonStr)),
 	)
 
