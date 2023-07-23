@@ -9,10 +9,6 @@ import (
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
 )
 
-const (
-	API_URL = "https://www.city.bunkyo.lg.jp/library/opendata-bunkyo/01tetsuduki-kurashi/05syusyubi/syusyubi.csv"
-)
-
 var (
 	areas    []entity.Area
 	allKinds []*entity.Kind
