@@ -59,7 +59,7 @@ func TestAreaCollectWeekdayBatch_UpdateAll(t *testing.T) {
 	}
 
 	kr.EXPECT().FindAll().Return(allKinds).Times(1)
-	ar.EXPECT().DeleteAndInsertAll(areaCollectWeekdays).Return(nil).Times(1)
+	ar.EXPECT().DeleteAndInsertAll(gomock.InAnyOrder(areaCollectWeekdays)).Return(nil).Times(1)
 
 	err := service.UpdateAll()
 
