@@ -10,7 +10,7 @@ import (
 	mock_service "github.com/yoshiyoshiharu/item-throw-ways/mock/domain/service/api"
 )
 
-func TestAreaService_FindAll (t *testing.T) {
+func TestAreaHandler_FindAll (t *testing.T) {
   ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

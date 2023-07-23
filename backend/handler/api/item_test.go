@@ -10,7 +10,7 @@ import (
 	mock_service "github.com/yoshiyoshiharu/item-throw-ways/mock/domain/service/api"
 )
 
-func TestItemService_FindAll (t *testing.T) {
+func TestItemHandler_FindAll (t *testing.T) {
   ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -33,7 +33,7 @@ func TestItemService_FindAll (t *testing.T) {
 
   resp, err := handler.FindAll(events.APIGatewayProxyRequest{})
 
-  t.Run("[正常系] エリア一覧をJSONで返すこと", func(t *testing.T) {
+  t.Run("[正常系] アイテム一覧をJSONで返すこと", func(t *testing.T) {
     assert.NoError(t, err)
 
     assert.Equal(t, 200, resp.StatusCode)
