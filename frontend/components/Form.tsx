@@ -50,10 +50,10 @@ export default function Form({ handleTargetItem }: { handleTargetItem: (item: It
         <input type="text" value={inputValue} onChange={handleChange} className="block w-10/12 h-10 p-6 border-2 rounded-lg shadow-lg shadow-black-500/40"/>
       </div>
 
-      <div className="flex flex-wrap justify-center mt-6">
+      <div className="flex flex-wrap justify-center mt-6 h-[85vh] overflow-auto">
         {
           items.map((item) => (
-            <div key={item.id} onClick={handleClick(item)} className="w-1/4 h-1/4 p-4">
+            <div key={item.id} onClick={handleClick(item)} className="w-1/4 p-4">
               <div className="flex items-center justify-center p-4 border-2 rounded-lg shadow-lg shadow-black-500/40 hover:bg-sky-50 cursor-pointer">
                 <p className="text-md font-bold">{item.name}</p>
               </div>
