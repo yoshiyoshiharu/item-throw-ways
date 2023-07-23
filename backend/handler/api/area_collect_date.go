@@ -12,7 +12,6 @@ import (
 )
 
 type AreaCollectDateHandler interface {
-	FindByAreaId(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
