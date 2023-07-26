@@ -2,13 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
+	"github.com/gin-gonic/gin"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/api"
 )
 
 type ItemHandler interface {
-	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
+	FindAll(*gin.Context)
 }
 
 type itemHandler struct {
@@ -21,19 +22,13 @@ func NewItemHandler(service service.ItemService) ItemHandler {
 	}
 }
 
-func (h *itemHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (h *itemHandler) FindAll(c *gin.Context) {
 	items := h.s.FindAll()
 
 	jsonBody, err := json.Marshal(items)
 	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
+    c.IndentedJSON(http.StatusInternalServerError, err)
 	}
 
-	return events.APIGatewayProxyResponse{
-		Headers: map[string]string{
-			"Access-Control-Allow-Origin": "*",
-		},
-		Body:       string(jsonBody),
-		StatusCode: 200,
-	}, nil
+  c.IndentedJSON(http.StatusOK, string(jsonBody))
 }

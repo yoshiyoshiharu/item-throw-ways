@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitItem(db *gorm.DB) *handler.ItemHandler {
+func InitItem(db *gorm.DB) handler.ItemHandler {
   r := repository.NewItemRepository(db)
 	s := service.NewItemService(r)
 	h := handler.NewItemHandler(s)
