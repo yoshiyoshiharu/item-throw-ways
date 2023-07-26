@@ -14,7 +14,7 @@ type areaRepository struct {
 	db *gorm.DB
 }
 
-func NewAreaRepository(db *gorm.DB) *areaRepository {
+func NewAreaRepository(db *gorm.DB) AreaRepository {
 	return &areaRepository{db: db}
 }
 

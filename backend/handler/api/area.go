@@ -15,7 +15,7 @@ type areaHandler struct {
 	s service.AreaService
 }
 
-func NewAreaHandler(service service.AreaService) *areaHandler {
+func NewAreaHandler(service service.AreaService) AreaHandler {
 	return &areaHandler{
 		s: service,
 	}

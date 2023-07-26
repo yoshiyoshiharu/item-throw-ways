@@ -10,7 +10,7 @@ type areaCollectWeekdayBatchHandler struct {
 	s service.AreaCollectWeekdayBatchService
 }
 
-func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchService) *areaCollectWeekdayBatchHandler {
+func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchService) AreaCollectWeekdayBatchHandler {
 	return &areaCollectWeekdayBatchHandler{
 		s: service,
 	}

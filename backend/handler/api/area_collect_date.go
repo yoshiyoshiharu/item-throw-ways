@@ -19,7 +19,7 @@ type areaCollectDateHandler struct {
 	s service.AreaCollectWeekdayService
 }
 
-func NewAreaCollectDateHandler(service service.AreaCollectWeekdayService) *areaCollectDateHandler {
+func NewAreaCollectDateHandler(service service.AreaCollectWeekdayService) AreaCollectDateHandler {
 	return &areaCollectDateHandler{
 		s: service,
 	}
