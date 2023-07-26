@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/batch"
@@ -19,5 +18,5 @@ func main() {
 	s := service.NewItemBatchService(ir, kr)
 	h := handler.NewItemBatchHandler(s)
 
-	lambda.Start(h.UpdateAll)
+  h.UpdateAll()
 }
