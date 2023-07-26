@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/lambda"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/batch"
