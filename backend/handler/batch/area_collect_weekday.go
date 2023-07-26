@@ -1,6 +1,10 @@
 package handler
 
-import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
+import (
+	"os"
+
+	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
+)
 
 type AreaCollectWeekdayBatchHandler interface {
 	UpdateAll()
@@ -19,5 +23,7 @@ func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchSe
 func (h *areaCollectWeekdayBatchHandler) UpdateAll() {
 	err := h.s.UpdateAll()
 
-	notifySlack(err)
+  if os.Getenv("ENV") == "production" {
+    notifySlack(err)
+  }
 }
