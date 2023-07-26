@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/yoshiyoshiharu/item-throw-ways/di"
+	di "github.com/yoshiyoshiharu/item-throw-ways/di/api"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
 
