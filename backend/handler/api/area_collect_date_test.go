@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
-	"github.com/aws/aws-lambda-go/events"
+	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
@@ -35,19 +37,21 @@ func TestAreaCollectDateHandler_FindAll(t *testing.T) {
 
 	mockAreaCollectWeekdayService.EXPECT().ConvertByAreaWithAroundMonths(1, 2023, time.Month(7)).Return(areaCollectDates)
 
-	request := events.APIGatewayProxyRequest{
-		QueryStringParameters: map[string]string{
-			"area_id": "1",
-			"year":    "2023",
-			"month":   "7",
-		},
-	}
-	resp, err := handler.FindAll(request)
+	w := httptest.NewRecorder()
+  c, _ := gin.CreateTestContext(w)
+  c.Request = httptest.NewRequest("GET", "/area_collect_dates?area_id=1&year=2023&month=7", nil)
+
+  handler.FindAll(c)
+
+  resp, _ := strconv.Unquote(w.Body.String())
 
 	t.Run("[正常系] エリアの回収日一覧をJSONで返すこと", func(t *testing.T) {
-		assert.NoError(t, err)
-
-		assert.Equal(t, 200, resp.StatusCode)
-		assert.Equal(t, `[{"kind":{"id":1,"name":"可燃ごみ"},"date":"2023-07-01"},{"kind":{"id":2,"name":"不燃ごみ"},"date":"2023-07-02"},{"kind":{"id":2,"name":"不燃ごみ"},"date":"2023-07-03"}]`, resp.Body)
+		assert.Equal(t, 200, w.Code)
+		assert.Equal(
+      t,
+      `[{"kind":{"id":1,"name":"可燃ごみ"},"date":"2023-07-01"},{"kind":{"id":2,"name":"不燃ごみ"},"date":"2023-07-02"},{"kind":{"id":2,"name":"不燃ごみ"},"date":"2023-07-03"}]`,
+      resp,
+    )
 	})
 }
+
