@@ -30,6 +30,7 @@ func (h *areaCollectDateHandler) FindAll(c *gin.Context) {
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, "request parameter is invalid")
 	}
+  fmt.Println(area_id, year, month)
 
 	areas := h.s.ConvertByAreaWithAroundMonths(area_id, year, month)
 
@@ -42,9 +43,9 @@ func (h *areaCollectDateHandler) FindAll(c *gin.Context) {
 }
 
 func parseParams(c *gin.Context) (int, int, time.Month, error) {
-	area_id, err := strconv.Atoi(c.Param("area_id"))
-	year, err := strconv.Atoi(c.Param("year"))
-	monthInt, err := strconv.Atoi(c.Param("month"))
+	area_id, err := strconv.Atoi(c.Query("area_id"))
+	year, err := strconv.Atoi(c.Query("year"))
+	monthInt, err := strconv.Atoi(c.Query("month"))
 	month, err := intToMonth(monthInt)
 
 	if err != nil {
