@@ -2,33 +2,38 @@ package handler
 
 import (
 	"encoding/json"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/aws/aws-lambda-go/events"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/api"
 )
 
 type AreaHandler interface {
-	FindAll(*gin.Context)
+	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type areaHandler struct {
 	s service.AreaService
 }
 
-func NewAreaHandler(service service.AreaService) AreaHandler {
+func NewAreaHandler(service service.AreaService) *areaHandler {
 	return &areaHandler{
 		s: service,
 	}
 }
 
-func (h *areaHandler) FindAll(c *gin.Context) {
+func (h *areaHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	areas := h.s.FindAll()
 
 	jsonBody, err := json.Marshal(areas)
 	if err != nil {
-    c.IndentedJSON(http.StatusInternalServerError, err)
+		return events.APIGatewayProxyResponse{}, err
 	}
 
-  c.IndentedJSON(http.StatusOK, string(jsonBody))
+	return events.APIGatewayProxyResponse{
+		Headers: map[string]string{
+			"Access-Control-Allow-Origin": "*",
+		},
+		Body:       string(jsonBody),
+		StatusCode: 200,
+	}, nil
 }

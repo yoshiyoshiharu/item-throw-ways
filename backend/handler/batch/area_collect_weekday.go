@@ -1,10 +1,6 @@
 package handler
 
-import (
-	"os"
-
-	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
-)
+import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 
 type AreaCollectWeekdayBatchHandler interface {
 	UpdateAll()
@@ -14,7 +10,7 @@ type areaCollectWeekdayBatchHandler struct {
 	s service.AreaCollectWeekdayBatchService
 }
 
-func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchService) AreaCollectWeekdayBatchHandler {
+func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchService) *areaCollectWeekdayBatchHandler {
 	return &areaCollectWeekdayBatchHandler{
 		s: service,
 	}
@@ -23,7 +19,5 @@ func NewAreaCollectWeekdayBatchHandler(service service.AreaCollectWeekdayBatchSe
 func (h *areaCollectWeekdayBatchHandler) UpdateAll() {
 	err := h.s.UpdateAll()
 
-  if os.Getenv("ENV") == "production" {
-    notifySlack(err)
-  }
+	notifySlack(err)
 }

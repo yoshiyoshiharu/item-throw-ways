@@ -2,50 +2,55 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/aws/aws-lambda-go/events"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/api"
 )
 
 type AreaCollectDateHandler interface {
-	FindAll(*gin.Context)
+	FindAll(events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 type areaCollectDateHandler struct {
 	s service.AreaCollectWeekdayService
 }
 
-func NewAreaCollectDateHandler(service service.AreaCollectWeekdayService) AreaCollectDateHandler {
+func NewAreaCollectDateHandler(service service.AreaCollectWeekdayService) *areaCollectDateHandler {
 	return &areaCollectDateHandler{
 		s: service,
 	}
 }
 
-func (h *areaCollectDateHandler) FindAll(c *gin.Context) {
-	area_id, year, month, err := parseParams(c)
+func (h *areaCollectDateHandler) FindAll(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	area_id, year, month, err := parseParams(request)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, "request parameter is invalid")
+		return events.APIGatewayProxyResponse{}, errors.New("request parameter is invalid")
 	}
-  fmt.Println(area_id, year, month)
 
 	areas := h.s.ConvertByAreaWithAroundMonths(area_id, year, month)
 
 	jsonBody, err := json.Marshal(areas)
 	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, err)
+		return events.APIGatewayProxyResponse{}, err
 	}
 
-  c.IndentedJSON(http.StatusOK, string(jsonBody))
+	return events.APIGatewayProxyResponse{
+		Headers: map[string]string{
+			"Access-Control-Allow-Origin": "*",
+		},
+		Body:       string(jsonBody),
+		StatusCode: 200,
+	}, nil
 }
 
-func parseParams(c *gin.Context) (int, int, time.Month, error) {
-	area_id, err := strconv.Atoi(c.Query("area_id"))
-	year, err := strconv.Atoi(c.Query("year"))
-	monthInt, err := strconv.Atoi(c.Query("month"))
+func parseParams(request events.APIGatewayProxyRequest) (int, int, time.Month, error) {
+	area_id, err := strconv.Atoi(request.QueryStringParameters["area_id"])
+	year, err := strconv.Atoi(request.QueryStringParameters["year"])
+	monthInt, err := strconv.Atoi(request.QueryStringParameters["month"])
 	month, err := intToMonth(monthInt)
 
 	if err != nil {

@@ -1,8 +1,17 @@
 package main
 
 import (
-	di "github.com/yoshiyoshiharu/item-throw-ways/di/batch"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
+	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
+	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/batch"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/entity"
+)
+
+var (
+	areas    []entity.Area
+	allKinds []*entity.Kind
 )
 
 func main() {
@@ -11,7 +20,10 @@ func main() {
 		panic(err)
 	}
 
-  h := di.InitAreaCollectWeekday(db)
+	ar := repository.NewAreaCollectWeekdayRepository(db)
+	kr := repository.NewKindRepository(db)
+	s := service.NewAreaCollectWeekdayBatchService(ar, kr)
+	h := handler.NewAreaCollectWeekdayBatchHandler(s)
 
-  h.UpdateAll()
+	lambda.Start(h.UpdateAll)
 }

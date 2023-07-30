@@ -14,7 +14,7 @@ type itemRepository struct {
 	db *gorm.DB
 }
 
-func NewItemRepository(db *gorm.DB) ItemRepository {
+func NewItemRepository(db *gorm.DB) *itemRepository {
 	return &itemRepository{db: db}
 }
 
