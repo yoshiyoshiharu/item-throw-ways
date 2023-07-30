@@ -14,7 +14,7 @@ type itemService struct {
 	r repository.ItemRepository
 }
 
-func NewItemService(repo repository.ItemRepository) *itemService {
+func NewItemService(repo repository.ItemRepository) ItemService {
 	return &itemService{
 		r: repo,
 	}
