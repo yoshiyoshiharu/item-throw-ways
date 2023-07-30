@@ -1,18 +1,19 @@
 package main
 
 import (
+	"context"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	di "github.com/yoshiyoshiharu/item-throw-ways/di/api"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
 
-func main() {
-  router := NewRouter()
-  router.Run(":8080")
-}
-
-func NewRouter() *gin.Engine {
+var ginLambda *ginadapter.GinLambda
+func init() {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
@@ -43,5 +44,14 @@ func NewRouter() *gin.Engine {
   router.GET("/items", itemHandler.FindAll)
   router.GET("/area_collect_dates", areaCollectDateHandler.FindAll)
 
-	return router
+  ginLambda = ginadapter.New(router)
+}
+
+func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	// If no name is provided in the HTTP request body, throw an error
+	return ginLambda.ProxyWithContext(ctx, req)
+}
+
+func main() {
+  lambda.Start(Handler)
 }

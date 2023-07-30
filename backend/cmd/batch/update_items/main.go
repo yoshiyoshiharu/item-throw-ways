@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/aws/aws-lambda-go/lambda"
 	di "github.com/yoshiyoshiharu/item-throw-ways/di/batch"
 	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
@@ -13,5 +14,5 @@ func main() {
 
   h := di.InitItemBatch(db)
 
-  h.UpdateAll()
+  lambda.Start(h.UpdateAll)
 }

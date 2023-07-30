@@ -8,10 +8,10 @@ import (
 )
 
 func InitItemBatch(db *gorm.DB) handler.ItemBatchHandler {
-	ar := repository.NewAreaCollectWeekdayRepository(db)
 	kr := repository.NewKindRepository(db)
-	s := service.NewAreaCollectWeekdayBatchService(ar, kr)
-	h := handler.NewAreaCollectWeekdayBatchHandler(s)
+	ir := repository.NewItemRepository(db)
+	s := service.NewItemBatchService(ir, kr)
+  h := handler.NewItemBatchHandler(s)
 
   return h
 }
