@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-  web:
-    build:
-      context: .
-    tty: true
-    volumes:
-      - .:/go/src
-    ports:
-      - 8080:8080
-    environment:
-      GOPATH: /go
-    env_file:
-      - .env
-    depends_on:
-      - db
   db:
     image: mysql:latest
     ports:
@@ -23,8 +9,15 @@ services:
       - item-throw-ways:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db
+      MYSQL_DATABASE: item_throw_ways
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    networks:
+      - external
 volumes:
   item-throw-ways:
+networks:
+  external:
+    driver: bridge
+    internal: false
+    name: item-throw-ways
