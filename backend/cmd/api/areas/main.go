@@ -1,16 +1,22 @@
-package di
+package main
 
 import (
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yoshiyoshiharu/item-throw-ways/domain/repository"
 	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/api"
 	handler "github.com/yoshiyoshiharu/item-throw-ways/handler/api"
-	"gorm.io/gorm"
+	"github.com/yoshiyoshiharu/item-throw-ways/infrastructure/database"
 )
 
-func InitArea(db *gorm.DB) handler.AreaHandler {
-  r := repository.NewAreaRepository(db)
+func main() {
+	db, err := database.Connect()
+	if err != nil {
+		panic(err)
+	}
+
+	r := repository.NewAreaRepository(db)
 	s := service.NewAreaService(r)
 	h := handler.NewAreaHandler(s)
 
-  return h
+	lambda.Start(h.FindAll)
 }
