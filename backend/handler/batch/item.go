@@ -3,7 +3,7 @@ package handler
 import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 
 type ItemBatchHandler interface {
-	FindAll()
+	UpdateAll()
 }
 
 type itemBatchHandler struct {
