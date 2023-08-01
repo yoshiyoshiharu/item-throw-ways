@@ -30,7 +30,6 @@ Resources:
           Properties:
             Path: /areas
             Method: GET
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   GetItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -45,7 +44,6 @@ Resources:
           Properties:
             Path: /items
             Method: GET
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   GetAreaCollectDatesFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -60,7 +58,6 @@ Resources:
           Properties:
             Path: /area_collect_dates
             Method: GET
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateItemsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -76,7 +73,6 @@ Resources:
       Environment:
         Variables:
           HIRAGANA_TRANSLATION_APP_ID: HIRAGANA_TRANSLATION_APP_ID
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
   UpdateAreaCollectWeekdaysFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -89,7 +85,6 @@ Resources:
           Properties:
             Schedule: rate(1 day)
       Timeout: 300
-      Role: arn:aws:iam::880843126767:role/go-academy-lambda
 Parameters:
   DbUser:
     Type: String
