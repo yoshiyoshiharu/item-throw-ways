@@ -14,7 +14,7 @@ type areaCollectWeekdayRepository struct {
 	db *gorm.DB
 }
 
-func NewAreaCollectWeekdayRepository(db *gorm.DB) AreaCollectWeekdayRepository {
+func NewAreaCollectWeekdayRepository(db *gorm.DB) *areaCollectWeekdayRepository {
 	return &areaCollectWeekdayRepository{db: db}
 }
 

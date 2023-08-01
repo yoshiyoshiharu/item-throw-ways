@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ca-app-02
+
+  Sample SAM Template for ca-app-02
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+    Environment:
+      Variables:
+        DB_USER: !Ref DbUser
+        DB_PASSWORD: !Ref DbPassword
+        DB_NAME: !Ref DbName
+        DB_HOST: !Ref DbHost
+        HIRAGANA_TRANSLATE_APP_ID: !Ref HiraganaTranslationAppId
+Resources:
+  GetAreasFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/api/areas/
+      Handler: areas
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /areas
+            Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  GetItemsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/api/items/
+      Handler: items
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /items
+            Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  GetAreaCollectDatesFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/api/area_collect_dates/
+      Handler: area_collect_dates
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /area_collect_dates
+            Method: GET
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  UpdateItemsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/batch/update_items
+      Handler: update_items
+      Runtime: go1.x
+      Events:
+        ScheduleEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+      Timeout: 300
+      Environment:
+        Variables:
+          HIRAGANA_TRANSLATION_APP_ID: HIRAGANA_TRANSLATION_APP_ID
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+  UpdateAreaCollectWeekdaysFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: cmd/batch/update_area_collect_weekdays
+      Handler: update_area_collect_weekdays
+      Runtime: go1.x
+      Events:
+        ScheduleEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+      Timeout: 300
+      Role: arn:aws:iam::880843126767:role/go-academy-lambda
+Parameters:
+  DbUser:
+    Type: String
+  DbPassword:
+    Type: String
+  DbName:
+    Type: String
+  DbHost:
+    Type: String
+  HiraganaTranslationAppId:
+    Type: String
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  GetAreasAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/areas/"
+  GetAreasAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/items/"
+  GetAreaCollectDatesAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/area_collect_dates/"
+
