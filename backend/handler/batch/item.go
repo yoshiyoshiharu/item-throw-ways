@@ -3,14 +3,14 @@ package handler
 import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 
 type ItemBatchHandler interface {
-	FindAll()
+	UpdateAll()
 }
 
 type itemBatchHandler struct {
 	s service.ItemBatchService
 }
 
-func NewItemBatchHandler(service service.ItemBatchService) *itemBatchHandler {
+func NewItemBatchHandler(service service.ItemBatchService) ItemBatchHandler {
 	return &itemBatchHandler{
 		s: service,
 	}

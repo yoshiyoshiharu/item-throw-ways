@@ -13,7 +13,7 @@ type kindRepository struct {
 	db *gorm.DB
 }
 
-func NewKindRepository(db *gorm.DB) *kindRepository {
+func NewKindRepository(db *gorm.DB) KindRepository {
 	return &kindRepository{db: db}
 }
 

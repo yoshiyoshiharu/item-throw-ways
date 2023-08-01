@@ -2,7 +2,7 @@ include .env
 
 local_start_api:
 	sam build --no-cached
-	sam local start-api --docker-network go-academy --parameter-overrides\
+	sam local start-api --docker-network item-throw-ways --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
 			DbName=${DB_NAME_DEV}\
@@ -10,7 +10,7 @@ local_start_api:
 			HiraganaTranslationAppId=${HIRAGANA_TRANSLATION_APP_ID_DEV}
 local_update_items:
 	sam build --no-cached
-	sam local invoke UpdateItemsFunction --docker-network go-academy --parameter-overrides\
+	sam local invoke UpdateItemsFunction --docker-network item-throw-ways --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
 			DbName=${DB_NAME_DEV}\
@@ -18,7 +18,7 @@ local_update_items:
 			HiraganaTranslationAppId=${HIRAGANA_TRANSLATION_APP_ID_DEV}
 local_update_area_collect_weekdays:
 	sam build --no-cached
-	sam local invoke UpdateAreaCollectWeekdaysFunction --docker-network go-academy --parameter-overrides\
+	sam local invoke UpdateAreaCollectWeekdaysFunction --docker-network item-throw-ways --parameter-overrides\
 			DbUser=${DB_USER_DEV}\
 			DbPassword=${DB_PASSWORD_DEV}\
 			DbName=${DB_NAME_DEV}\

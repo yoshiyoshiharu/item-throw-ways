@@ -15,7 +15,7 @@ type itemHandler struct {
 	s service.ItemService
 }
 
-func NewItemHandler(service service.ItemService) *itemHandler {
+func NewItemHandler(service service.ItemService) ItemHandler {
 	return &itemHandler{
 		s: service,
 	}
