@@ -14,7 +14,7 @@ type areaService struct {
 	r repository.AreaRepository
 }
 
-func NewAreaService(repo repository.AreaRepository) *areaService {
+func NewAreaService(repo repository.AreaRepository) AreaService {
 	return &areaService{
 		r: repo,
 	}

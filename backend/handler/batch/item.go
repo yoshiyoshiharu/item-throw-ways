@@ -10,7 +10,7 @@ type itemBatchHandler struct {
 	s service.ItemBatchService
 }
 
-func NewItemBatchHandler(service service.ItemBatchService) *itemBatchHandler {
+func NewItemBatchHandler(service service.ItemBatchService) ItemBatchHandler {
 	return &itemBatchHandler{
 		s: service,
 	}
