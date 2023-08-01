@@ -1,1 +1,1 @@
-# item-throw-ways
+# ゴミ分別チェッカー
