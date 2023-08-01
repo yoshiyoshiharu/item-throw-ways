@@ -25,7 +25,7 @@ type areaCollectWeekdayBatchService struct {
 	kr repository.KindRepository
 }
 
-func NewAreaCollectWeekdayBatchService(ar repository.AreaCollectWeekdayRepository, kr repository.KindRepository) AreaCollectWeekdayBatchService {
+func NewAreaCollectWeekdayBatchService(ar repository.AreaCollectWeekdayRepository, kr repository.KindRepository) *areaCollectWeekdayBatchService {
 	return &areaCollectWeekdayBatchService{
 		ar: ar,
 		kr: kr,

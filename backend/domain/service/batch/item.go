@@ -25,7 +25,7 @@ type itemBatchService struct {
 	kr repository.KindRepository
 }
 
-func NewItemBatchService(ir repository.ItemRepository, kr repository.KindRepository) ItemBatchService {
+func NewItemBatchService(ir repository.ItemRepository, kr repository.KindRepository) *itemBatchService {
 	return &itemBatchService{
 		ir: ir,
 		kr: kr,

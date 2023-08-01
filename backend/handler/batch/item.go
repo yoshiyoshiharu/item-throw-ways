@@ -1,20 +1,16 @@
 package handler
 
-import (
-	"os"
-
-	service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
-)
+import service "github.com/yoshiyoshiharu/item-throw-ways/domain/service/batch"
 
 type ItemBatchHandler interface {
-	UpdateAll()
+	FindAll()
 }
 
 type itemBatchHandler struct {
 	s service.ItemBatchService
 }
 
-func NewItemBatchHandler(service service.ItemBatchService) ItemBatchHandler {
+func NewItemBatchHandler(service service.ItemBatchService) *itemBatchHandler {
 	return &itemBatchHandler{
 		s: service,
 	}
@@ -23,7 +19,5 @@ func NewItemBatchHandler(service service.ItemBatchService) ItemBatchHandler {
 func (h *itemBatchHandler) UpdateAll() {
 	err := h.s.UpdateAll()
 
-  if os.Getenv("ENV") == "production" {
-    notifySlack(err)
-  }
+	notifySlack(err)
 }
